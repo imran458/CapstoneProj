@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "200151943912",
+    "firebase_url": "https://diggraffiti-359cb.firebaseio.com",
+    "project_id": "diggraffiti-359cb",
+    "storage_bucket": "diggraffiti-359cb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:200151943912:android:65f82516af05c4e1fc975d",
+        "android_client_info": {
+          "package_name": "com.frontend"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "200151943912-63rd10eat8f6238braf6uufnosc15bvb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAwnrffpZlDf5OtgmdTcD22ykXNH__VIXc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "200151943912-63rd10eat8f6238braf6uufnosc15bvb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
