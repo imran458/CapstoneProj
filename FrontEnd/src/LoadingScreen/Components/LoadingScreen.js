@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text} from 'react-native';
+import {View, Image} from 'react-native';
 import styles from '../Styles/LoadingScreenStyles.js';
 
 const FIVE_SECONDS = 5000;
@@ -14,7 +14,7 @@ export default class LoadingScreen extends Component{
     render() {
         return (
             <View style={styles.container}>
-                <Text>Diggraffiti</Text>
+                <Image source={require('../../../assets/logo.png')} style={styles.logo}/>
             </View>
         );
     }
