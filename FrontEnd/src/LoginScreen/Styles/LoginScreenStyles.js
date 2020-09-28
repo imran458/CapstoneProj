@@ -2,19 +2,19 @@ import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
     container: {
-        backgroundColor: 'white',
+        backgroundColor: '#be0000',
         justifyContent: 'center', 
         alignItems: 'center', 
         flex: 1
     },
 
     googleSignInButton: {
-        width: '51%', 
+        width: '62%', 
         height: '5%'
     },
 
     facebookSignInButton: {
-        width: '49%', 
+        width: '60%', 
         height: '4.5%',
         backgroundColor: '#151515'
     },

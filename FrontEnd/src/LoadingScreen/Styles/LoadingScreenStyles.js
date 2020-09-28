@@ -3,10 +3,15 @@ import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
     container: {
-        backgroundColor: 'purple',
+        backgroundColor: '#be0000',
         justifyContent: 'center', 
         alignItems: 'center', 
         flex: 1
     },
+
+    logo: { 
+        resizeMode: 'contain',
+        height: 220,
+    }
     
 });
