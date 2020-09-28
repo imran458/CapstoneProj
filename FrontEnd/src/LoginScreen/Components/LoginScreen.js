@@ -26,8 +26,8 @@ export default class LoginScreen extends Component{
 
     handleGoogleLogin = async () => {
         try {
-           await GoogleSignin.hasPlayServices();
-           const userInfo = await GoogleSignin.signIn();
+            await GoogleSignin.hasPlayServices();
+            const userInfo = await GoogleSignin.signIn();
             console.log('_____userinfo',userInfo)
             this.setState({ userInfo });
         } catch (error) {
@@ -36,34 +36,34 @@ export default class LoginScreen extends Component{
    }
 
    handleFacebookLogin() {
-       console.log("this is this: ", this);
         LoginManager.logInWithPermissions(['public_profile', 'email', 'user_friends']).then(
             function (result) {
                 if (result.isCancelled) {
                 console.log('Login cancelled')
                 } else {
-                console.log('Login success with permissions: ' + result.grantedPermissions.toString())
+                console.log('Sucessfully logged in with Facebook!');
                 AccessToken.getCurrentAccessToken().then((data) => {
                     const { accessToken } = data;
                     fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
                     .then((response) => response.json())
                     .then((json) => {
-                        const ID = json.id
-                        console.log("ID " + ID);
+                        const id = json.id
+                        const email = json.email
+                        const name = json.name
+                        let firstName = name.substr(0, name.indexOf(' ')); 
+                        let lastName = name.substr(name.indexOf(' ')+1);
 
-                        const EM = json.email
-                        console.log("Email " + EM);
-
-                        const FN = json.first_name
-                        console.log("First Name " + FN);
+                        console.log("User Facebook Email: " + email);
+                        console.log("User Facebook First Name: " + firstName);
+                        console.log("User Facebook Last Name: " + lastName);
                     })
                     .catch(() => {
-                        reject('ERROR GETTING DATA FROM FACEBOOK')
+                        reject('Error getting data from Facebook!');
                     })})
                 }
             },
             function (error) {
-                console.log('Login fail with error: ' + error)
+                console.log('Login fail with error: ' + error);
             }
         )
     }
@@ -71,7 +71,7 @@ export default class LoginScreen extends Component{
     render() {
         return (
             <View style={styles.container}>
-                <TouchableOpacity style={styles.facebookSignInButton} onPress={() => {this.handleFacebookLogin()}}>
+                <TouchableOpacity style={styles.facebookSignInButton} onPress={() => this.handleFacebookLogin()}>
                     <Entypo name="facebook" size={30} style={styles.facebookIcon}/>
                     <Text style={styles.signInWithFacebookText}>Sign in with Facebook </Text>          
                 </TouchableOpacity>
@@ -80,10 +80,9 @@ export default class LoginScreen extends Component{
                     style={styles.googleSignInButton}
                     size={GoogleSigninButton.Size.Wide}
                     color={GoogleSigninButton.Color.Dark}
-                    onPress={()=>{this.handleGoogleLogin()}}
+                    onPress={()=>this.handleGoogleLogin()}
                     disabled={this.state.isSigninInProgress} 
                 />
-
             </View>
         );
     }
