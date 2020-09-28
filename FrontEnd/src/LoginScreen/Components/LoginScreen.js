@@ -38,33 +38,33 @@ export default class LoginScreen extends Component{
    handleFacebookLogin() {
        console.log("this is this: ", this);
         LoginManager.logInWithPermissions(['public_profile', 'email', 'user_friends']).then(
-        function (result) {
-            if (result.isCancelled) {
-            console.log('Login cancelled')
-            } else {
-            console.log('Login success with permissions: ' + result.grantedPermissions.toString())
-            AccessToken.getCurrentAccessToken().then((data) => {
-                const { accessToken } = data;
-                fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
-                .then((response) => response.json())
-                .then((json) => {
-                    const ID = json.id
-                    console.log("ID " + ID);
+            function (result) {
+                if (result.isCancelled) {
+                console.log('Login cancelled')
+                } else {
+                console.log('Login success with permissions: ' + result.grantedPermissions.toString())
+                AccessToken.getCurrentAccessToken().then((data) => {
+                    const { accessToken } = data;
+                    fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
+                    .then((response) => response.json())
+                    .then((json) => {
+                        const ID = json.id
+                        console.log("ID " + ID);
 
-                    const EM = json.email
-                    console.log("Email " + EM);
+                        const EM = json.email
+                        console.log("Email " + EM);
 
-                    const FN = json.first_name
-                    console.log("First Name " + FN);
-                })
-                .catch(() => {
-                    reject('ERROR GETTING DATA FROM FACEBOOK')
-                })})
+                        const FN = json.first_name
+                        console.log("First Name " + FN);
+                    })
+                    .catch(() => {
+                        reject('ERROR GETTING DATA FROM FACEBOOK')
+                    })})
+                }
+            },
+            function (error) {
+                console.log('Login fail with error: ' + error)
             }
-        },
-        function (error) {
-            console.log('Login fail with error: ' + error)
-        }
         )
     }
 
