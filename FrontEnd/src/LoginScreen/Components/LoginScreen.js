@@ -4,6 +4,7 @@ import styles from '../Styles/LoginScreenStyles.js';
 import { LoginManager, AccessToken} from 'react-native-fbsdk'
 import { GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 import Entypo from 'react-native-vector-icons/Entypo';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 
 export default class LoginScreen extends Component{
     constructor(props){
@@ -93,6 +94,10 @@ export default class LoginScreen extends Component{
                     onPress={()=>this.handleGoogleLogin()}
                     disabled={this.state.isSigninInProgress} 
                 />
+
+                <TouchableOpacity onPress={() => this.jumpToCameraScreen()} >
+                    <AntDesign name="camera" size={30} />       
+                </TouchableOpacity>
 
             </View>
         );
