@@ -4,7 +4,6 @@ import styles from '../Styles/LoginScreenStyles.js';
 import { LoginManager, AccessToken} from 'react-native-fbsdk'
 import { GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 import Entypo from 'react-native-vector-icons/Entypo';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 
 export default class LoginScreen extends Component{
     constructor(props){
@@ -12,7 +11,6 @@ export default class LoginScreen extends Component{
         this.state = {
             isSigninInProgress:false,
             userInfo:null,
-            isLoggedIn: false
         }
 
         GoogleSignin.configure({
@@ -38,10 +36,8 @@ export default class LoginScreen extends Component{
    }
 
    handleFacebookLogin = () => {
-       console.log(this);
-       this.setState({isLoggedIn: true});
         LoginManager.logInWithPermissions(['public_profile', 'email', 'user_friends']).then(
-            function (result) {
+            (result) => {
                 if (result.isCancelled) {
                 console.log('Login cancelled')
                 } else {
@@ -49,7 +45,7 @@ export default class LoginScreen extends Component{
                 this.fetchFaceBookUserInfo();
                 }
             },
-            function (error) {
+            (error) => {
                 console.log('Login fail with error: ' + error);
             }
         )
@@ -70,7 +66,7 @@ export default class LoginScreen extends Component{
                 console.log("User Facebook Email: " + email);
                 console.log("User Facebook First Name: " + firstName);
                 console.log("User Facebook Last Name: " + lastName);
-                console.log("this is this: " + this);
+                this.jumpToCameraScreen();
             })
             .catch(() => {
                 reject('Error getting data from Facebook!');
@@ -78,16 +74,14 @@ export default class LoginScreen extends Component{
         }
 
     jumpToCameraScreen () {
-        console.log(this.state.isLoggedIn);
-        if (this.state.isLoggedIn){
-            this.props.navigation.navigate('CameraScreen');
-        }
+        this.props.navigation.navigate('CameraScreen');
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <TouchableOpacity style={styles.facebookSignInButton} onPress={() => {this.handleFacebookLogin()}}>
+
+                <TouchableOpacity style={styles.facebookSignInButton} onPress={() => this.handleFacebookLogin()}>
                     <Entypo name="facebook" size={30} style={styles.facebookIcon}/>
                     <Text style={styles.signInWithFacebookText}>Sign in with Facebook </Text>          
                 </TouchableOpacity>
@@ -100,9 +94,6 @@ export default class LoginScreen extends Component{
                     disabled={this.state.isSigninInProgress} 
                 />
 
-                <TouchableOpacity  onPress={() => this.jumpToCameraScreen()}>
-                    <AntDesign name="camera" size={30} />       
-                </TouchableOpacity>
             </View>
         );
     }
