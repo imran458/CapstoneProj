@@ -1,14 +1,30 @@
 {
-  "name": "diggraffiti_backend",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "express": "^4.17.1"
-  }
+	"name": "capstone-back",
+	"main": "app.js",
+	"version": "1.0.0",
+	"scripts": {
+		"start": "node ./bin/www"
+	},
+	"dependencies": {
+		"axios": "^0.19.1",
+		"cheerio": "^1.0.0-rc.3",
+		"compression": "^1.7.3",
+		"connect-session-sequelize": "^6.0.0",
+		"cookie-parser": "~1.4.3",
+		"cors": "^2.8.5",
+		"debug": "~2.6.9",
+		"dotenv": "^8.2.0",
+		"express": "~4.16.0",
+		"express-session": "^1.17.0",
+		"helmet": "^3.14.0",
+		"morgan": "~1.9.0",
+		"passport": "^0.4.1",
+		"pg": "^7.17.1",
+		"pgtools": "^0.3.0",
+		"sequelize": "^4.41.0",
+		"unminify": "^1.1.0"
+	},
+	"engines": {
+		"node": "12.x"
+	}
 }
