@@ -1,4 +1,4 @@
-package com.frontend;
+package com.diggraffiti.frontend;
 
 import android.app.Application;
 import android.content.Context;

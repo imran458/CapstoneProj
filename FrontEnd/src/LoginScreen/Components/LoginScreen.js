@@ -16,7 +16,7 @@ export default class LoginScreen extends Component{
 
         GoogleSignin.configure({
             scopes: [],
-            webClientId: 'add yor webclient here',
+            webClientId: '143642503415-i23i6pkb3dto537im136m23n07lfh84o.apps.googleusercontent.com',
             offlineAccess: true, 
             hostedDomain: '', 
             forceConsentPrompt: true,

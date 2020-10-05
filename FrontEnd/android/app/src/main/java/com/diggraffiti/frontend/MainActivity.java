@@ -1,4 +1,4 @@
-package com.frontend;
+package com.diggraffiti.frontend;
 
 import com.facebook.react.ReactActivity;
 
