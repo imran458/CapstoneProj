@@ -1,42 +1,42 @@
 {
   "project_info": {
-    "project_number": "200151943912",
-    "firebase_url": "https://diggraffiti-359cb.firebaseio.com",
-    "project_id": "diggraffiti-359cb",
-    "storage_bucket": "diggraffiti-359cb.appspot.com"
+    "project_number": "143642503415",
+    "firebase_url": "https://diggraffiti-aaae1.firebaseio.com",
+    "project_id": "diggraffiti-aaae1",
+    "storage_bucket": "diggraffiti-aaae1.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:200151943912:android:65f82516af05c4e1fc975d",
+        "mobilesdk_app_id": "1:143642503415:android:9dc6a138203a24d1a84bf2",
         "android_client_info": {
-          "package_name": "com.frontend"
+          "package_name": "com.diggraffiti.frontend"
         }
       },
       "oauth_client": [
         {
-          "client_id": "200151943912-5hth2olr64mgqp8q6q4cmpvmdn2ualq9.apps.googleusercontent.com",
+          "client_id": "143642503415-bhfam4kobbbbqtt74qbrmnif5ojs2dbd.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.frontend",
-            "certificate_hash": "a126a383e7cd11d84b2c205a0ec6fd6723893624"
+            "package_name": "com.diggraffiti.frontend",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
           }
         },
         {
-          "client_id": "200151943912-63rd10eat8f6238braf6uufnosc15bvb.apps.googleusercontent.com",
+          "client_id": "143642503415-i23i6pkb3dto537im136m23n07lfh84o.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAwnrffpZlDf5OtgmdTcD22ykXNH__VIXc"
+          "current_key": "AIzaSyBYY9MLuzYO6GguCT9j8Z43wY3wnpyGutE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "200151943912-63rd10eat8f6238braf6uufnosc15bvb.apps.googleusercontent.com",
+              "client_id": "143642503415-i23i6pkb3dto537im136m23n07lfh84o.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
