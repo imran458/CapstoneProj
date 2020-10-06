@@ -5,14 +5,12 @@ import { LoginManager, AccessToken} from 'react-native-fbsdk'
 import { GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import {connect} from 'react-redux';
+import {addFirstName, addLastName, addEmail} from '../../actions/loginInfo.js';
 
-export default class LoginScreen extends Component{
+class LoginScreen extends Component{
     constructor(props){
         super();
-        this.state = {
-            isSigninInProgress:false,
-            userInfo:null,
-        }
 
         GoogleSignin.configure({
             scopes: [],
@@ -28,9 +26,16 @@ export default class LoginScreen extends Component{
     handleGoogleLogin = async () => {
         try {
             await GoogleSignin.hasPlayServices();
-            const userInfo = await GoogleSignin.signIn();
-            console.log('_____userinfo',userInfo)
-            this.setState({ userInfo });
+            let userInfo = await GoogleSignin.signIn();
+            let firstName = userInfo['user']['givenName'];
+            let lastName = userInfo['user']['familyName'];
+            let email = userInfo['user']['email'];
+            let id = userInfo['user']['id'];
+            
+            this.props.addFirstName(firstName);
+            this.props.addLastName(lastName);
+            this.props.addEmail(email);
+            this.jumpToCameraScreen();
         } catch (error) {
             console.log(error)
         }
@@ -58,16 +63,17 @@ export default class LoginScreen extends Component{
             fetch('https://graph.facebook.com/v2.5/me?fields=email,name,friends&access_token=' + accessToken)
             .then((response) => response.json())
             .then((json) => {
-                const id = json.id
-                const email = json.email
-                const name = json.name
+                let id = json.id
+                let email = json.email
+                let name = json.name
                 let firstName = name.substr(0, name.indexOf(' ')); 
                 let lastName = name.substr(name.indexOf(' ')+1);
-
-                console.log("User Facebook Email: " + email);
-                console.log("User Facebook First Name: " + firstName);
-                console.log("User Facebook Last Name: " + lastName);
+            
+                this.props.addFirstName(firstName);
+                this.props.addLastName(lastName);
+                this.props.addEmail(email);
                 this.jumpToCameraScreen();
+                
             })
             .catch(() => {
                 reject('Error getting data from Facebook!');
@@ -92,7 +98,7 @@ export default class LoginScreen extends Component{
                     size={GoogleSigninButton.Size.Wide}
                     color={GoogleSigninButton.Color.Dark}
                     onPress={()=>this.handleGoogleLogin()}
-                    disabled={this.state.isSigninInProgress} 
+                    disabled={false} 
                 />
 
                 <TouchableOpacity onPress={() => this.jumpToCameraScreen()} >
@@ -103,4 +109,23 @@ export default class LoginScreen extends Component{
         );
     }
 }
+
+const mapStateToProps = (state) => {
+    console.log(state);
+    return {
+        firstName: state.loginReducer.firstName,
+        lastName: state.loginReducer.lastName,
+        email: state.loginReducer.email
+    }
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addFirstName: (firstName) => dispatch(addFirstName(firstName)),
+        addLastName: (lastName) => dispatch(addLastName(lastName)),
+        addEmail: (email)=> dispatch(addEmail(email)),
+    }
+}
     
+
+export default connect(mapStateToProps, mapDispatchToProps) (LoginScreen);
