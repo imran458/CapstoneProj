@@ -3,14 +3,11 @@ const jwt = require("jsonwebtoken");
 
 const authController = {
 	login: login,
-	logout: logout,
 };
 
 
 async function login(req, res, next) {
 	try {
-		console.log('dfnakjd')
-		console.log(req.body.email)
 		const user = await User.findOne({ where: { email: req.body.email } });
 		if (!user) {
 			await User.create(req.body);
@@ -24,10 +21,6 @@ async function login(req, res, next) {
 
 async function createToken(body){
 	return jwt.sign(body, 'token secret change me', { expiresIn: '1800s' });
-}
-
-async function logout(req, res, next) {
-
 }
 
 
