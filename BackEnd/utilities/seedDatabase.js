@@ -4,11 +4,13 @@ const seedDatabase = async () => {
 	try {
 		await Promise.all([
 			User.create({
-				name: "Elijah Cano",
+				first: "Elijah",
+				last: "Cano",
 				email: "elijahcano@gmail.com",
 			}),
 			User.create({
-				name: "Jordan Yaqoob",
+				first: "Jordan",
+				last: "Yaqoob",
 				email: "jordan@gmail.com",
 			})
 		]);
