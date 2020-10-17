@@ -115,6 +115,10 @@ app.get("/", (req, res, next) => {
 	res.json("Welcome to the Digraffiti Backend");
 });
 
+app.listen(1234, function () {
+	console.log('Example app listening on port 8000!');
+   });
+
 // Main function declaration;
 const bootApp = async () => {
 	await sessionStore.sync();
