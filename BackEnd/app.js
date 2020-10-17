@@ -46,9 +46,11 @@ const syncDatabase = async () => {
 	} else {
 		console.log("As a reminder, the forced synchronization option is on");
 		try {
+			console.log("potentially working")
 			await db.drop();
 			await db.sync({ force: true });
 			await seedDatabase();
+			console.log("testing!1")
 		} catch (err) {
 			if (err.name === "SequelizeConnectionError") {
 				await createLocalDatabase();
