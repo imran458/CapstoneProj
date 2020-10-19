@@ -46,11 +46,9 @@ const syncDatabase = async () => {
 	} else {
 		console.log("As a reminder, the forced synchronization option is on");
 		try {
-			console.log("potentially working")
 			await db.drop();
 			await db.sync({ force: true });
 			await seedDatabase();
-			console.log("testing!1")
 		} catch (err) {
 			if (err.name === "SequelizeConnectionError") {
 				await createLocalDatabase();
@@ -115,8 +113,8 @@ app.get("/", (req, res, next) => {
 	res.json("Welcome to the Digraffiti Backend");
 });
 
-app.listen(1234, function () {
-	console.log('Example app listening on port 8000!');
+app.listen(1234, '0.0.0.0', function () {
+	console.log('App running on port 1234 and accessible on all IP addresses on local machine!');
    });
 
 // Main function declaration;
