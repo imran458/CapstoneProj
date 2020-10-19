@@ -11,6 +11,9 @@
 #import <FlipperKitNetworkPlugin/FlipperKitNetworkPlugin.h>
 #import <SKIOSNetworkPlugin/SKIOSNetworkAdapter.h>
 #import <FlipperKitReactPlugin/FlipperKitReactPlugin.h>
+#import <ReactNativeConfig/ReactNativeConfig.h>
+@import GooglePlaces;
+@import GoogleMaps;
 
 static void InitializeFlipper(UIApplication *application) {
   FlipperClient *client = [FlipperClient sharedClient];
@@ -27,6 +30,9 @@ static void InitializeFlipper(UIApplication *application) {
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+  NSString *apiKey = [ReactNativeConfig envFor:@"API_KEY"];
+  [GMSPlacesClient provideAPIKey:apiKey];
+  [GMSServices provideAPIKey:apiKey];
 #ifdef FB_SONARKIT_ENABLED
   InitializeFlipper(application);
 #endif

@@ -152,6 +152,9 @@ android {
             keyPassword 'android'
         }
     }
+    sourceSets {
+        main.java.srcDirs += 'src/main'
+    }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
