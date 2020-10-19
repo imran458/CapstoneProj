@@ -7,6 +7,8 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {connect} from 'react-redux';
 import {addFirstName, addLastName, addEmail} from '../../actions/loginInfo.js';
+import axios from 'axios';
+import {API_URL} from "@env"
 
 class LoginScreen extends Component{
     constructor(props){
@@ -35,7 +37,7 @@ class LoginScreen extends Component{
             this.props.addFirstName(firstName);
             this.props.addLastName(lastName);
             this.props.addEmail(email);
-            this.jumpToCameraScreen();
+            this.sendUserInfoToBackend(firstName, lastName, email);
         } catch (error) {
             console.log(error)
         }
@@ -72,7 +74,7 @@ class LoginScreen extends Component{
                 this.props.addFirstName(firstName);
                 this.props.addLastName(lastName);
                 this.props.addEmail(email);
-                this.jumpToCameraScreen();
+                this.sendUserInfoToBackend(firstName, lastName, email);
                 
             })
             .catch(() => {
@@ -82,6 +84,25 @@ class LoginScreen extends Component{
 
     jumpToCameraScreen () {
         this.props.navigation.navigate('CameraScreen');
+    }
+
+    sendUserInfoToBackend(firstName, lastName, email){
+        let url = '' + API_URL + '/api/auth';
+        console.log("this is the url: " + url);
+        axios({
+            method: 'post',
+            url: url,
+            data: {first: firstName, last: lastName, email: email}
+          })
+          .then((response) => { 
+      
+            console.log(response);
+            this.jumpToCameraScreen();
+          }, (error) => {
+            
+            console.log(error)
+      
+          });
     }
 
     render() {
