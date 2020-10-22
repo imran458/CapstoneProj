@@ -8,7 +8,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {connect} from 'react-redux';
 import {addFirstName, addLastName, addEmail} from '../../actions/loginInfo.js';
 import axios from 'axios';
-import {API_URL} from "@env"
+import {API_URL, GOOGLE_SIGN_IN_CLIENT_ID} from "@env"
 
 class LoginScreen extends Component{
     constructor(props){
@@ -16,7 +16,7 @@ class LoginScreen extends Component{
 
         GoogleSignin.configure({
             scopes: [],
-            webClientId: '143642503415-i23i6pkb3dto537im136m23n07lfh84o.apps.googleusercontent.com',
+            webClientId: GOOGLE_SIGN_IN_CLIENT_ID,
             offlineAccess: true, 
             hostedDomain: '', 
             forceConsentPrompt: true,
@@ -88,7 +88,7 @@ class LoginScreen extends Component{
 
     sendUserInfoToBackend(firstName, lastName, email){
         let url = '' + API_URL + '/api/auth';
-        console.log("this is the url: " + url);
+        
         axios({
             method: 'post',
             url: url,
