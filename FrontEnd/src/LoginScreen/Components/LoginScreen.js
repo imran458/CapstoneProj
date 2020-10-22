@@ -8,7 +8,8 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {connect} from 'react-redux';
 import {addFirstName, addLastName, addEmail} from '../../actions/loginInfo.js';
 import axios from 'axios';
-import {API_URL, GOOGLE_SIGN_IN_CLIENT_ID} from "@env"
+import {API_URL, GOOGLE_SIGN_IN_CLIENT_ID, Wikitude_AR_LICENSE_KEY} from "@env"
+import Wikitude from 'react-native-wikitude';
 
 class LoginScreen extends Component{
     constructor(props){
@@ -105,6 +106,11 @@ class LoginScreen extends Component{
           });
     }
 
+    launchWiki(){
+        console.log("pressing AR BUTTON!");
+        Wikitude.startAR('https://yourserver.com/yourwikitudestudioproject/', true, true, true, Wikitude_AR_LICENSE_KEY)
+    }
+
     render() {
         return (
             <View style={styles.container}>
@@ -124,6 +130,10 @@ class LoginScreen extends Component{
 
                 <TouchableOpacity onPress={() => this.jumpToCameraScreen()} >
                     <AntDesign name="camera" size={30} />       
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.wikitudeARTestButton} onPress={() => this.launchWiki()}>
+                    <Text>Wikitude AR Test Button</Text>
                 </TouchableOpacity>
 
             </View>
