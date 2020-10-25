@@ -1,6 +1,7 @@
 apply plugin: "com.android.application"
 
 import com.android.build.OutputFile
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 /**
  * The react.gradle file registers a task for each build variant (e.g. bundleDebugJsAndAssets
@@ -132,6 +133,7 @@ android {
         applicationId "com.diggraffiti.frontend"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        manifestPlaceholders = [ API_KEY:project.env.get("API_KEY") ]
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
@@ -151,6 +153,9 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+    }
+    sourceSets {
+        main.java.srcDirs += 'src/main'
     }
     buildTypes {
         debug {
