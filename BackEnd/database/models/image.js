@@ -1,16 +1,16 @@
 const Sequelize = require("sequelize");
 const db = require("../db");
 
-const User = db.define("user", {
-	first: {
+const Image = db.define("image", {
+	url: {
 		type: Sequelize.STRING,
 		allowNull: false
 	},
-	last: {
+	user: {
 		type: Sequelize.STRING,
 		allowNull: false
 	},
-	email: {
+	location: {
 		type: Sequelize.STRING,
 		unique: true,
 		allowNull: false
@@ -18,5 +18,4 @@ const User = db.define("user", {
 });
 
 
-
-module.exports = User;
+module.exports = Image;

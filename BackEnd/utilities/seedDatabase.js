@@ -1,4 +1,4 @@
-const { User, Post } = require("../database/models");
+const { User, Image } = require("../database/models");
 
 const seedDatabase = async () => {
 	try {
@@ -12,6 +12,11 @@ const seedDatabase = async () => {
 				first: "Jordan",
 				last: "Yaqoob",
 				email: "jordan@gmail.com",
+			}),
+			Image.create({
+				url: "https://testcreative.co.uk/wp-content/uploads/2018/08/Test-Twitter-Icon.jpg",
+				user: "jordan@gmail.com",
+				location: "(171, 123)"
 			})
 		]);
 	} catch (err) {
