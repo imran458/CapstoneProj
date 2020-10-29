@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import styles from '../Styles/sketchScreenStyles.js';
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -26,19 +26,19 @@ export default class SketchScreen extends Component{
             <View style={styles.container}>
                 <View style={{ flex: 1, flexDirection: 'row' }}>
                 <TouchableOpacity style={styles.paintBrush} onPress={() => this.togglePressed()}>
-                    <FontAwesome5 name="paint-brush" size={40}/>
+                    <FontAwesome5 name="paint-brush" size={50}/>
                 </TouchableOpacity>
 
                 {this.state.pressed ?
                     <RNSketchCanvas
-                        containerStyle={styles.sketchContainer}
-                        canvasStyle={styles.sketchCanvas}
                         defaultStrokeIndex={0}
                         defaultStrokeWidth={5}
-                        closeComponent={<View style={styles.functionButton}><FontAwesome5 name="paint-brush" size={40}/></View>}
+                        containerStyle={styles.sketchContainer}
+                        canvasStyle={styles.sketchCanvas}
+                        closeComponent={<View style={styles.close}><MaterialCommunityIcons name="window-close" size={40}/></View>}
                         onClosePressed={() => this.togglePressed()}
-                        clearComponent={<View style={styles.trash}><Fontisto name="trash" size={40}/></View>}
-                        eraseComponent={<View style={styles.eraser}><MaterialCommunityIcons name="eraser" size={40} /></View>}
+                        clearComponent={<View style={styles.trash}><Fontisto name="trash" size={35}/></View>}
+                        eraseComponent={<View style={styles.eraser}><MaterialCommunityIcons name="eraser" size={45} /></View>}
                         strokeComponent={color => (<View style={[{ backgroundColor: color }, styles.strokeColorButton]}/>)}
                         strokeSelectedComponent={(color, index, changed) => {
                         return (<View style={[{backgroundColor: color, borderWidth: 2 }, styles.strokeColorButton]}/>)}}

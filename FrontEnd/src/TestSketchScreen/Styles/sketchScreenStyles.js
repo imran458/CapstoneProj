@@ -13,29 +13,26 @@ export default StyleSheet.create({
     marginVertical: 8, 
     width: 30, 
     height: 30,
-     borderRadius: 15,
+    borderRadius: 15,
   },
 
   strokeWidthButton: {
-    marginHorizontal: 2.5, 
-    marginVertical: 8, 
-    width: 30, 
-    height: 30, 
-    borderRadius: 15,
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    backgroundColor: 'black'
+    width: 40, 
+    height: 40, 
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    top: 3,
   },
 
-  functionButton: {
-    marginHorizontal: 2.5,
-    marginVertical: 8,
+  close: {
     height: 30, 
     width: 60,
     backgroundColor: 'transparent', 
     justifyContent: 'center', 
     alignItems: 'center', 
-    borderRadius: 5,
+    top: 8,
   },
 
   paintBrush: {
@@ -45,14 +42,14 @@ export default StyleSheet.create({
   },
 
   trash: {
-    marginHorizontal: 2.5, 
-    marginVertical: 8, 
     height: 30, 
     width: 60,
     backgroundColor: 'transparent', 
     justifyContent: 'center', 
-    alignItems: 'center', 
-    borderRadius: 5,
+    alignItems: 'center',
+    top: 8,
+    left: -15,
+    marginLeft: 50
   },
 
   save: {
@@ -64,17 +61,17 @@ export default StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center', 
     borderRadius: 5,
+    left: -5
   },
 
   eraser: {
-    marginHorizontal: 2.5, 
-    marginVertical: 8, 
     height: 30, 
     width: 60,
     backgroundColor: 'transparent', 
     justifyContent: 'center', 
-    alignItems: 'center', 
-    borderRadius: 5,
+    alignItems: 'center',
+    top: 8,
+    left: 20,
   },
 
   sketchContainer: {
@@ -84,7 +81,7 @@ export default StyleSheet.create({
 
   sketchCanvas: {
     backgroundColor: 'transparent', 
-    flex: 1 
+    flex: 1,
   },
 
 });
