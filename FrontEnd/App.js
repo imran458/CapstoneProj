@@ -8,8 +8,8 @@ import MapScreen from './src/MapScreen/Components/MapScreen.js';
 
 const AppNavigator = createSwitchNavigator(
   {
-    MapScreen, MapScreen,
-    CameraScreen, CameraScreen,
+    MapScreen: MapScreen,
+    CameraScreen: CameraScreen,
     LoginScreen: LoginScreen,
     LoadingScreen: LoadingScreen
   }, 
