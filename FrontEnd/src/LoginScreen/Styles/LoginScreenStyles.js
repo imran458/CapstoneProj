@@ -32,16 +32,4 @@ export default StyleSheet.create({
         color: 'white',
         width: '50%'
     },
-
-    wikitudeARTestButton:{
-        position: 'absolute',
-        bottom: '20%',
-        alignSelf: 'center',
-        backgroundColor: '#ADD8E6',
-        width: '40%',
-        height: '3%',
-        borderWidth: 2,
-        borderColor: '#ADD8E6'
-    }
-    
 });
