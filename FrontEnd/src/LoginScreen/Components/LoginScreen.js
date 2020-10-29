@@ -106,20 +106,13 @@ class LoginScreen extends Component{
           });
     }
 
-    launchWiki(){
-        console.log("pressing AR BUTTON!");
-        Wikitude.startAR('https://yourserver.com/yourwikitudestudioproject/', true, true, true, Wikitude_AR_LICENSE_KEY)
-    }
-
     render() {
         return (
             <View style={styles.container}>
-
                 <TouchableOpacity style={styles.facebookSignInButton} onPress={() => this.handleFacebookLogin()}>
                     <Entypo name="facebook" size={30} style={styles.facebookIcon}/>
                     <Text style={styles.signInWithFacebookText}>Sign in with Facebook </Text>          
                 </TouchableOpacity>
-
                 <GoogleSigninButton
                     style={styles.googleSignInButton}
                     size={GoogleSigninButton.Size.Wide}
@@ -127,15 +120,9 @@ class LoginScreen extends Component{
                     onPress={()=>this.handleGoogleLogin()}
                     disabled={false} 
                 />
-
                 <TouchableOpacity onPress={() => this.jumpToCameraScreen()} >
                     <AntDesign name="camera" size={30} />       
                 </TouchableOpacity>
-
-                <TouchableOpacity style={styles.wikitudeARTestButton} onPress={() => this.launchWiki()}>
-                    <Text>Wikitude AR Test Button</Text>
-                </TouchableOpacity>
-
             </View>
         );
     }
