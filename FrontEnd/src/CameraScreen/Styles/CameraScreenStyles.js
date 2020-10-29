@@ -1,6 +1,5 @@
 import {StyleSheet} from 'react-native';
 
-
 export default StyleSheet.create({
     container: {
         backgroundColor: '#be0000',
@@ -15,6 +14,4 @@ export default StyleSheet.create({
         top: '10%',
     }
 
-   
-    
 });
