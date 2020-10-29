@@ -9,17 +9,33 @@ export default StyleSheet.create({
   },
 
   strokeColorButton: {
-    marginHorizontal: 2.5, marginVertical: 8, width: 30, height: 30, borderRadius: 15,
+    marginHorizontal: 2.5, 
+    marginVertical: 8, 
+    width: 30, 
+    height: 30,
+     borderRadius: 15,
   },
 
   strokeWidthButton: {
-    marginHorizontal: 2.5, marginVertical: 8, width: 30, height: 30, borderRadius: 15,
-    justifyContent: 'center', alignItems: 'center', backgroundColor: 'black'
+    marginHorizontal: 2.5, 
+    marginVertical: 8, 
+    width: 30, 
+    height: 30, 
+    borderRadius: 15,
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    backgroundColor: 'black'
   },
 
   functionButton: {
-    marginHorizontal: 2.5, marginVertical: 8, height: 30, width: 60,
-    backgroundColor: '#39579A', justifyContent: 'center', alignItems: 'center', borderRadius: 5,
+    marginHorizontal: 2.5,
+    marginVertical: 8,
+    height: 30, 
+    width: 60,
+    backgroundColor: 'transparent', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    borderRadius: 5,
   },
 
   paintBrush: {
@@ -29,18 +45,36 @@ export default StyleSheet.create({
   },
 
   trash: {
-    marginHorizontal: 2.5, marginVertical: 8, height: 30, width: 60,
-    backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center', borderRadius: 5,
+    marginHorizontal: 2.5, 
+    marginVertical: 8, 
+    height: 30, 
+    width: 60,
+    backgroundColor: 'transparent', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    borderRadius: 5,
   },
 
   save: {
-    marginHorizontal: 2.5, marginVertical: 8, height: 30, width: 60,
-    backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center', borderRadius: 5,
+    marginHorizontal: 2.5, 
+    marginVertical: 8, 
+    height: 30, 
+    width: 60,
+    backgroundColor: 'transparent', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    borderRadius: 5,
   },
 
   eraser: {
-    marginHorizontal: 2.5, marginVertical: 8, height: 30, width: 60,
-    backgroundColor: 'transparent', justifyContent: 'center', alignItems: 'center', borderRadius: 5,
+    marginHorizontal: 2.5, 
+    marginVertical: 8, 
+    height: 30, 
+    width: 60,
+    backgroundColor: 'transparent', 
+    justifyContent: 'center', 
+    alignItems: 'center', 
+    borderRadius: 5,
   },
 
   sketchContainer: {

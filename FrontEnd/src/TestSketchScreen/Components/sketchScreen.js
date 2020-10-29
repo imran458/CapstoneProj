@@ -35,6 +35,8 @@ export default class SketchScreen extends Component{
                         canvasStyle={styles.sketchCanvas}
                         defaultStrokeIndex={0}
                         defaultStrokeWidth={5}
+                        closeComponent={<View style={styles.functionButton}><FontAwesome5 name="paint-brush" size={40}/></View>}
+                        onClosePressed={() => this.togglePressed()}
                         clearComponent={<View style={styles.trash}><Fontisto name="trash" size={40}/></View>}
                         eraseComponent={<View style={styles.eraser}><MaterialCommunityIcons name="eraser" size={40} /></View>}
                         strokeComponent={color => (<View style={[{ backgroundColor: color }, styles.strokeColorButton]}/>)}
