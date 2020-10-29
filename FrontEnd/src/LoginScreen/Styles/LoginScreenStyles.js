@@ -31,6 +31,5 @@ export default StyleSheet.create({
     facebookIcon: {
         color: 'white',
         width: '50%'
-    }
-    
+    },
 });
