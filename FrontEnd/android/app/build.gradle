@@ -133,6 +133,7 @@ android {
         applicationId "com.diggraffiti.frontend"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        compileSdkVersion 29
         manifestPlaceholders = [ API_KEY:project.env.get("API_KEY") ]
         versionCode 1
         versionName "1.0"
