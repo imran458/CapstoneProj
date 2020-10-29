@@ -18,7 +18,6 @@ export default class SketchScreen extends Component{
 
     togglePressed(){
         this.setState({pressed: !this.state.pressed});
-        console.log(this.state.pressed);
     }
 
     render() {
