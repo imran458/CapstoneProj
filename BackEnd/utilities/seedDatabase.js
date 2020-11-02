@@ -15,6 +15,7 @@ const seedDatabase = async () => {
 			}),
 			Image.create({
 				url: "https://testcreative.co.uk/wp-content/uploads/2018/08/Test-Twitter-Icon.jpg",
+				name: "Test-Twitter-Icon.jpg",
 				user: "jordan@gmail.com",
 				location: "(171, 123)"
 			})

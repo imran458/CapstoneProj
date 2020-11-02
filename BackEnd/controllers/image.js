@@ -1,4 +1,3 @@
-var path = require('path');
 const { Image } = require("../database/models");
 
 const imageController = {
@@ -17,22 +16,29 @@ const bucket = storage.bucket(bucketname);
 async function upload(req, res, next) {
 	try {
         const { originalname, buffer } = req.file;
+
+        // add time stamp to image name to prevent duplicate names
         newName = originalname.split('.');
         newName.pop();
         newName.join('.').replace(/ /g, "_");
         newName = newName + "_" + Date.now() + ".jpg";
-        console.log(newName)
+
+        const user = req.body.user
+        if(!user){
+            res.status(400).send("No user provided")
+        }
         
         const blob = bucket.file(newName);
-
         const blobStream = blob.createWriteStream({resumable: false})
 
+        // performs write to GCS
         blobStream.on('finish', () => {
             const url = `https://storage.googleapis.com/${bucketname}/${newName}`
 
             Image.create({
                 url: url,
-                user: 'jordan@gmail.com',
+                name: newName,
+                user: user,
                 location: "()"
             })
 
@@ -44,7 +50,8 @@ async function upload(req, res, next) {
           .end(buffer)
 
 	} catch (err) {
-		next(err);
+        res.status(400).send(err);
+        next(err);
 	}
 }
 
@@ -65,19 +72,16 @@ async function getImages(req, res, next){
 async function deleteImage(req, res, next){
     try{
         const deleted = await Image.destroy({
-            where: {id: req.params.id}
+            where: {name: req.params.name}
         })
-        
-        const cloudDelete = await bucket.file('test2.jpg').delete()
-        console.log(cloudDelete)
         if(deleted){
+            await bucket.file(req.params.name).delete()
             res.status(200).send("Successfully Deleted")
         }
         else{
             res.status(400).send("There was a problem deleting this image")
         }
     } catch (err) {
-        console.log(err)
         next(err)
     }
 }
