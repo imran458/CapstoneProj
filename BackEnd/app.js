@@ -14,6 +14,8 @@ const logger = require("morgan");
 const helmet = require("helmet");
 const compression = require("compression");
 const passport = require("passport");
+const bodyParser = require('body-parser')
+const multer = require('multer')
 const cors = require("cors");
 
 const SequelizeStore = require("connect-session-sequelize")(session.Store);
@@ -61,6 +63,13 @@ const syncDatabase = async () => {
 	}
 };
 
+const multerMid = multer({
+	storage: multer.memoryStorage(),
+	limits: {
+	  fileSize: 5 * 1024 * 1024,
+	},
+})
+
 // Instantiate our express application;
 const app = express();
 
@@ -86,6 +95,10 @@ const configureApp = () => {
 
 	app.use(passport.initialize());
 	app.use(passport.session());
+
+	app.use(multerMid.single('file'))
+    app.use(bodyParser.json())
+    app.use(bodyParser.urlencoded({extended: false}))
 
 	// Mount our apiRouter;
 	app.use("/api", apiRouter);

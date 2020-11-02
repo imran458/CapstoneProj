@@ -5,8 +5,11 @@ const imageController = require("../controllers/image");
 // POST api/image/upload
 router.route("/upload").post(imageController.upload);
 
-// GET api/image/getImages
+// GET api/image/getImages/<email>
 router.route("/getImages/:email").get(imageController.getImages)
+
+// DELETE api/image/delete/<imageid>
+router.route("/delete/:id").delete(imageController.deleteImage)
 
 
 
