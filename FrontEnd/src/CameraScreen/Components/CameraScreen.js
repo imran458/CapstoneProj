@@ -38,13 +38,7 @@ export default class CameraScreen extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity style={styles.mapMarkerIcon}>
-          <Fontisto
-            name="map-marker-alt"
-            size={30}
-            onPress={() => this.jumpToMapScreen()}
-          />
-        </TouchableOpacity>
+      
         <RNCamera
           ref={(ref) => {
             this.CameraScreen = ref;
@@ -52,7 +46,17 @@ export default class CameraScreen extends Component {
           style={{position: 'absolute',top: 0,left: 0,right: 0, bottom: 0}}
           type={RNCamera.Constants.Type.back}
           flashMode={RNCamera.Constants.FlashMode.auto}
-          captureAudio={false}></RNCamera>
+          captureAudio={false}>
+
+          <TouchableOpacity style={styles.mapMarkerIcon}>
+            <Fontisto
+              name="map-marker-alt"
+              size={30}
+              onPress={() => this.jumpToMapScreen()}
+            />
+          </TouchableOpacity>
+        </RNCamera>
+
 
         
       </View>
