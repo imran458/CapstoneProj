@@ -30,6 +30,7 @@ export default StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'black',
         top: 3,
+        left: 39
       },
     
       close: {
@@ -54,7 +55,7 @@ export default StyleSheet.create({
         justifyContent: 'center', 
         alignItems: 'center',
         top: 8,
-        left: -15,
+        left: 7,
         marginLeft: 50
       },
     
@@ -67,7 +68,7 @@ export default StyleSheet.create({
         justifyContent: 'center', 
         alignItems: 'center', 
         borderRadius: 5,
-        left: -5
+        left: 5
       },
     
       eraser: {
@@ -77,7 +78,7 @@ export default StyleSheet.create({
         justifyContent: 'center', 
         alignItems: 'center',
         top: 8,
-        left: 20,
+        left: 0,
       },
     
       sketchContainer: {
