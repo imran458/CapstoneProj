@@ -87,10 +87,6 @@ class LoginScreen extends Component{
         this.props.navigation.navigate('CameraScreen');
     }
 
-    jumpToSketchScreen(){
-        this.props.navigation.navigate('sketchScreen');    
-    }
-
     sendUserInfoToBackend(firstName, lastName, email){
         let url = '' + API_URL + '/api/auth';
         
@@ -126,10 +122,6 @@ class LoginScreen extends Component{
                 />
                 <TouchableOpacity onPress={() => this.jumpToCameraScreen()} >
                     <AntDesign name="camera" size={30} />       
-                </TouchableOpacity>
-
-                <TouchableOpacity style={styles.sketchButton} onPress={() => this.jumpToSketchScreen()}>
-                    <Text style={styles.sketchText}>Test Sketch</Text>
                 </TouchableOpacity>
             </View>
         );
