@@ -49,12 +49,12 @@ export default class CameraScreen extends Component {
           ref={(ref) => {
             this.CameraScreen = ref;
           }}
-          style={styles.CAMERA}
+          style={{position: 'absolute',top: 0,left: 0,right: 0, bottom: 0}}
           type={RNCamera.Constants.Type.back}
-          flashMode={RNCamera.Constants.FlashMode.on}
+          flashMode={RNCamera.Constants.FlashMode.auto}
           captureAudio={false}></RNCamera>
 
-        <Text>Camera Screen</Text>
+        
       </View>
     );
   }
