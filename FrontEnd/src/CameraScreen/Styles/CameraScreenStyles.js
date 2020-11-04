@@ -30,7 +30,7 @@ export default StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'black',
         top: 3,
-        left: 39
+        left: -10
       },
     
       close: {
@@ -56,7 +56,7 @@ export default StyleSheet.create({
         alignItems: 'center',
         top: 8,
         left: 7,
-        marginLeft: 50
+        //marginLeft: 50
       },
     
       save: {

@@ -9,7 +9,6 @@ import {connect} from 'react-redux';
 import {addFirstName, addLastName, addEmail} from '../../actions/loginInfo.js';
 import axios from 'axios';
 import {API_URL, GOOGLE_SIGN_IN_CLIENT_ID, Wikitude_AR_LICENSE_KEY} from "@env"
-import Wikitude from 'react-native-wikitude';
 
 class LoginScreen extends Component{
     constructor(props){

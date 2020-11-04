@@ -10,7 +10,7 @@ export default StyleSheet.create({
 
     googleSignInButton: {
         width: '62%', 
-        height: '5%'
+        height: '7%'
     },
 
     facebookSignInButton: {

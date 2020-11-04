@@ -89,7 +89,7 @@ export default class CameraScreen extends Component {
             : 
             <View >
               <TouchableOpacity style={styles.mapMarkerIcon}>
-                <Fontisto name="map-marker-alt" size={30} onPress={() => this.jumpToMapScreen()}/>
+                <Fontisto name="map-marker-alt" size={42} onPress={() => this.jumpToMapScreen()}/>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.paintBrush} onPress={() => this.paintBrushPressed()}>
