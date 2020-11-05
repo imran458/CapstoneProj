@@ -8,7 +8,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {connect} from 'react-redux';
 import {addFirstName, addLastName, addEmail} from '../../actions/loginInfo.js';
 import axios from 'axios';
-import {API_URL, GOOGLE_SIGN_IN_CLIENT_ID, Wikitude_AR_LICENSE_KEY} from "@env"
+import {API_URL, GOOGLE_SIGN_IN_CLIENT_ID} from "@env"
 
 class LoginScreen extends Component{
     constructor(props){
