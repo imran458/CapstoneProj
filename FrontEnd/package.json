@@ -31,6 +31,7 @@
     "react-native-safe-area-context": "^3.1.8",
     "react-native-screens": "^2.11.0",
     "react-native-search-bar": "^3.5.1",
+    "react-native-share": "^4.1.0",
     "react-native-vector-icons": "^7.1.0",
     "react-native-wikitude-sdk": "github:joaquinlom/react-native-wikitude-sdk",
     "react-navigation": "^4.4.0",

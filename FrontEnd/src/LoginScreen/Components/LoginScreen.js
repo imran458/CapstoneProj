@@ -86,6 +86,10 @@ class LoginScreen extends Component{
         this.props.navigation.navigate('CameraScreen');
     }
 
+    jumpToWiki () {
+        this.props.navigation.navigate('Wiki');
+    }
+
     sendUserInfoToBackend(firstName, lastName, email){
         let url = '' + API_URL + '/api/auth';
         
@@ -121,6 +125,10 @@ class LoginScreen extends Component{
                 />
                 <TouchableOpacity onPress={() => this.jumpToCameraScreen()} >
                     <AntDesign name="camera" size={30} />       
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{position: 'absolute', bottom: '20%'}} onPress={()=> this.jumpToWiki()}>
+                    <Text>Wiki Test</Text>
                 </TouchableOpacity>
             </View>
         );

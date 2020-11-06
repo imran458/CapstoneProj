@@ -98,7 +98,7 @@ export default class CameraScreen extends Component {
                 <FontAwesome5 name="paint-brush" size={50}/>
               </TouchableOpacity>
 
-              <WikitudeView
+              {/*<WikitudeView
                 ref="wikitudeView"
                 style={{ flex: 1 }}
                 url={'https://yourserver.com/yourwikitudestudioproject/'}
@@ -107,7 +107,7 @@ export default class CameraScreen extends Component {
                 onJsonReceived={this.onJsonReceived}
                 onFinishLoading={this.onFinishLoading}
                 onScreenCaptured={this.onScreenCaptured}
-              />
+              />*/}
             </View>
 
             }
