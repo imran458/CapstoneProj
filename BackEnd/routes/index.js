@@ -6,11 +6,15 @@ const usersRouter = require("./users");
 
 const authRouter = require("./auth");
 
+const imageRouter = require("./image")
+
 
 // Mount our subrouters to assemble our apiRouter;
 router.use("/users", usersRouter);
 
 router.use("/auth", authRouter);
+
+router.use("/image", imageRouter)
 
 
 // Error handling middleware;

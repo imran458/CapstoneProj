@@ -6,6 +6,7 @@
 		"start": "node ./bin/www"
 	},
 	"dependencies": {
+		"@google-cloud/storage": "^5.3.0",
 		"axios": "^0.19.1",
 		"cheerio": "^1.0.0-rc.3",
 		"compression": "^1.7.3",
@@ -20,6 +21,7 @@
 		"helmet": "^3.14.0",
 		"jsonwebtoken": "^8.5.1",
 		"morgan": "~1.9.0",
+		"multer": "^1.4.2",
 		"passport": "^0.4.1",
 		"pg": "^7.17.1",
 		"pgtools": "^0.3.0",
