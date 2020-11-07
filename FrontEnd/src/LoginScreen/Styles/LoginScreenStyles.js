@@ -31,6 +31,18 @@ export default StyleSheet.create({
     facebookIcon: {
         color: 'white',
         width: '50%'
+    },
+
+    sketchButton: {
+        backgroundColor: 'green',
+        bottom: '20%',
+        position: 'absolute',
+        width: '20%',
+        height: '4%'
+    },
+
+    sketchText: {
+        color: 'white'
     }
-    
+
 });

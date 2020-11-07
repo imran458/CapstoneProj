@@ -2,15 +2,12 @@ import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
     container: {
-        backgroundColor: '#be0000',
-        justifyContent: 'center', 
-        alignItems: 'center', 
-        flex: 1
-    },  
-
-    cameraIcon: {
-        position: 'absolute',
-        left: '10%',
-        top: '10%',
+        backgroundColor: 'white',
+        borderColor: '#ddd',
+        borderBottomWidth: 1
+    },
+    text: {
+        fontSize: 18,
+        padding: 7
     }
 });

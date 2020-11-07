@@ -5,11 +5,10 @@ import LoginScreen from './src/LoginScreen/Components/LoginScreen.js';
 import CameraScreen from './src/CameraScreen/Components/CameraScreen.js';
 import MapScreen from './src/MapScreen/Components/MapScreen.js';
 
-
 const AppNavigator = createSwitchNavigator(
   {
-    MapScreen, MapScreen,
-    CameraScreen, CameraScreen,
+    MapScreen: MapScreen,
+    CameraScreen: CameraScreen,
     LoginScreen: LoginScreen,
     LoadingScreen: LoadingScreen
   }, 
