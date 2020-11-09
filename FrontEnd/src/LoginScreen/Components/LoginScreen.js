@@ -8,8 +8,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {connect} from 'react-redux';
 import {addFirstName, addLastName, addEmail} from '../../actions/loginInfo.js';
 import axios from 'axios';
-import {API_URL, GOOGLE_SIGN_IN_CLIENT_ID, Wikitude_AR_LICENSE_KEY} from "@env"
-import Wikitude from 'react-native-wikitude';
+import {API_URL, GOOGLE_SIGN_IN_CLIENT_ID} from "@env"
 
 class LoginScreen extends Component{
     constructor(props){
@@ -87,6 +86,10 @@ class LoginScreen extends Component{
         this.props.navigation.navigate('CameraScreen');
     }
 
+    jumpToWiki () {
+        this.props.navigation.navigate('Wiki');
+    }
+
     sendUserInfoToBackend(firstName, lastName, email){
         let url = '' + API_URL + '/api/auth';
         
@@ -123,6 +126,11 @@ class LoginScreen extends Component{
                 <TouchableOpacity onPress={() => this.jumpToCameraScreen()} >
                     <AntDesign name="camera" size={30} />       
                 </TouchableOpacity>
+
+                {/*<TouchableOpacity style={{position: 'absolute', bottom: '20%'}} onPress={()=> this.jumpToWiki()}>
+                    <Text>Wiki Test</Text>
+                </TouchableOpacity>
+                */}
             </View>
         );
     }

@@ -7,6 +7,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import WikitudeView from 'react-native-wikitude-sdk';
+import {Wikitude_AR_LICENSE_KEY} from "@env"
 
 export default class CameraScreen extends Component {
   constructor() {
@@ -89,13 +91,25 @@ export default class CameraScreen extends Component {
             : 
             <View >
               <TouchableOpacity style={styles.mapMarkerIcon}>
-                <Fontisto name="map-marker-alt" size={30} onPress={() => this.jumpToMapScreen()}/>
+                <Fontisto name="map-marker-alt" size={42} onPress={() => this.jumpToMapScreen()}/>
               </TouchableOpacity>
 
               <TouchableOpacity style={styles.paintBrush} onPress={() => this.paintBrushPressed()}>
                 <FontAwesome5 name="paint-brush" size={50}/>
               </TouchableOpacity>
+
+              {/*<WikitudeView
+                ref="wikitudeView"
+                style={{ flex: 1 }}
+                url={'https://yourserver.com/yourwikitudestudioproject/'}
+                licenseKey={Wikitude_AR_LICENSE_KEY}
+                feature={WikitudeView.Geo}
+                onJsonReceived={this.onJsonReceived}
+                onFinishLoading={this.onFinishLoading}
+                onScreenCaptured={this.onScreenCaptured}
+              />*/}
             </View>
+
             }
         </RNCamera>
       </View>
