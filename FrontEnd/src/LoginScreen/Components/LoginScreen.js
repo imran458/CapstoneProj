@@ -127,9 +127,10 @@ class LoginScreen extends Component{
                     <AntDesign name="camera" size={30} />       
                 </TouchableOpacity>
 
-                <TouchableOpacity style={{position: 'absolute', bottom: '20%'}} onPress={()=> this.jumpToWiki()}>
+                {/*<TouchableOpacity style={{position: 'absolute', bottom: '20%'}} onPress={()=> this.jumpToWiki()}>
                     <Text>Wiki Test</Text>
                 </TouchableOpacity>
+                */}
             </View>
         );
     }
