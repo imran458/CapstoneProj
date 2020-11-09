@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Share from "react-native-share";
 import styles from '../Styles/test.js';
 import {Wikitude_AR_LICENSE_KEY} from "@env"
+import world from './imageontarget.js';
 
 const url = 'ARchitectExamples/11_Video_2_PlaybackStates/index'
 const config = {
@@ -83,10 +84,12 @@ class Wikitude extends Component{
       });
   };
 
+  
   render(){
       console.log("screen is working")
       return(
           <View>
+            
             {this.state.isFocus ? 
             
                 <SafeAreaView />
