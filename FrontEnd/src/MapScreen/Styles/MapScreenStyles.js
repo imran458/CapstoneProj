@@ -4,10 +4,11 @@ export default StyleSheet.create({
     container: {
         backgroundColor: 'white',
         borderColor: '#ddd',
-        borderBottomWidth: 1
+        position: 'relative',
     },
     text: {
         fontSize: 18,
-        padding: 7
+        padding: 7,
+        color: 'black'
     }
 });

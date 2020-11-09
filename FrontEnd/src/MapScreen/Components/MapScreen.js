@@ -19,7 +19,12 @@ export default class MapScreen extends Component{
             },
             search: "",
             predictions: [],
-            marker: [],
+            marker: {marker: { 
+              latitude: 34.052235,
+              longitude: -118.243683,
+              latitudeDelta:.1,
+              longitudeDelta: .1
+            }},
             bottomMargin: 1
         }
         this.handleChangeTextDebounced = _.debounce(this.handleChangeText, 1000);
@@ -40,7 +45,7 @@ export default class MapScreen extends Component{
             alert("Location access denied");
           }
         } catch (err) {
-          console.warn(err);
+          console.log(err);
         }
     }
 
@@ -51,14 +56,15 @@ export default class MapScreen extends Component{
     };
 
     async handleChangeText(text){
-      // this.setState({ search: text }, () => {
-      //   console.log("TEXT CHANGED:", this.state.search);
-      // });
+      this.setState({ search: text }, () => {
+        console.log(this.state.search)
+      });
       const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${env.API_KEY}&input=
       ${text}&location=${this.state.region.latitude}, ${this.state.region.longitude}&radius=2000`;
       try{
         const result = await fetch(url);
         const json =  await result.json();
+        //console.log(json); //here
         this.setState( {predictions: json.predictions} );
       } catch(err){
         console.log(err);
@@ -66,12 +72,12 @@ export default class MapScreen extends Component{
     }
 
     //button to go back to current location???
-    //pinpoint location
     async handleSelectedAddress(prediction){
       const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${prediction['place_id']}&key=${env.API_KEY}`
       try{
         const result = await fetch(url);
         const json =  await result.json();
+        //console.log(json); //here
         this.setState( {region: { 
           latitude: json.result.geometry.location.lat,
           longitude: json.result.geometry.location.lng,
@@ -80,9 +86,11 @@ export default class MapScreen extends Component{
         }});
         this.setState( {marker: { 
           latitude: json.result.geometry.location.lat,
-          longitude: json.result.geometry.location.lng
+          longitude: json.result.geometry.location.lng,
+          latitudeDelta:.1,
+          longitudeDelta: .1
         }}, () => {
-          console.log("MARKER", this.state.marker);
+          //console.log("MARKER", this.state.marker);
         });
       } catch(err){
         console.log(err);
@@ -90,6 +98,7 @@ export default class MapScreen extends Component{
     }
 
     render() {
+        //console.log(this.state.predictions)
         const predictions = this.state.predictions.map((prediction, index) => (
           <TouchableOpacity key={index} style={styles.container} onPress={() => this.handleSelectedAddress(prediction)}>
             <View>
@@ -99,31 +108,57 @@ export default class MapScreen extends Component{
             </View>
           </TouchableOpacity>
         ));
-        return (
-           <SafeAreaView style={{flex: 1}}>
-            <SearchBar
-              value={this.state.search}
-              onChangeText={text=>
-                this.handleChangeTextDebounced(text)
-              }
-              placeholder='Search'
-            />
-            {predictions}
-            <MapView 
-              region={this.state.region}
-              onRegionChange={this.onRegionChange}
-              style={{flex: 1, marginBottom: this.state.bottomMargin}}        
-              zoomEnabled={true}  
-              followsUserLocation={true}
-              showsMyLocationButton={true}     
-              showsUserLocation={true}
-              annotations={this.state.marker} 
-              onMapReady={() => this.setState({ bottomMargin: 0 })} 
-            >
-              <Marker coordinate={{ latitude: this.state.marker.latitude, longitude: this.state.marker.longitude }} />
-            </MapView>
-           </SafeAreaView>
-        );
+        // if(!this.state.marker.longitude){
+        //   return (
+        //     <SafeAreaView style={{flex: 1}}>
+        //      <SearchBar
+        //        value={this.state.search}
+        //        onChangeText={text=> this.onTextChange(text)}
+        //        //make sure text is updating before api call is made
+        //        placeholder='Search'
+        //      />
+        //      {predictions}
+        //      <MapView 
+        //        region={this.state.region}
+        //        onRegionChange={this.onRegionChange}
+        //        style={{flex: 1, marginBottom: this.state.bottomMargin}}        
+        //        zoomEnabled={true}  
+        //        followsUserLocation={true}
+        //        showsMyLocationButton={true}     
+        //        showsUserLocation={true}
+        //        annotations={this.state.marker} 
+        //        onMapReady={() => this.setState({ bottomMargin: 0 })} 
+        //      >
+        //      </MapView>
+        //     </SafeAreaView>
+        //  );
+        // }
+        //else{
+          return (
+            <SafeAreaView style={{flex: 1}}>
+              <SearchBar
+                value={this.state.search}
+                onChangeText={text=>
+                  this.handleChangeTextDebounced(text)
+                }
+              />
+              {predictions}
+              <MapView 
+                region={this.state.region}
+                onRegionChange={this.onRegionChange}
+                style={{flex: 1, marginBottom: this.state.bottomMargin}}        
+                zoomEnabled={true}  
+                followsUserLocation={true}
+                showsMyLocationButton={true}     
+                showsUserLocation={true}
+                annotations={this.state.marker} 
+                onMapReady={() => this.setState({ bottomMargin: 0 })} 
+              >
+                <Marker coordinate={{ latitude: this.state.marker.latitude, longitude: this.state.marker.longitude }} />
+              </MapView>
+            </SafeAreaView>
+          );
+        //}
     }
 }
     
