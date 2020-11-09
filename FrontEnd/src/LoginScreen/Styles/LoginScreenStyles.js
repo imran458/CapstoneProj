@@ -15,7 +15,7 @@ export default StyleSheet.create({
 
     facebookSignInButton: {
         width: '60%', 
-        height: '4.5%',
+        height: '6%',
         backgroundColor: '#151515'
     },
 
