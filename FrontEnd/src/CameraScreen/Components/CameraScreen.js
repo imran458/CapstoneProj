@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, PermissionsAndroid} from 'react-native';
+import {View, Text, Alert, TouchableOpacity, PermissionsAndroid} from 'react-native';
 import styles from '../Styles/CameraScreenStyles.js';
 import {RNCamera} from 'react-native-camera';
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
@@ -8,7 +8,8 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import WikitudeView from 'react-native-wikitude-sdk';
-import {Wikitude_AR_LICENSE_KEY} from "@env"
+import {Wikitude_AR_LICENSE_KEY} from "@env";
+import RNFS from 'react-native-fs';
 
 export default class CameraScreen extends Component {
   constructor() {
@@ -18,7 +19,8 @@ export default class CameraScreen extends Component {
     }
 
     this.state = {
-      pressed: false
+      pressed: false,
+      savedImageInfo: {}
     }
   }
 
@@ -48,6 +50,38 @@ export default class CameraScreen extends Component {
   paintBrushPressed(){
     this.setState({pressed: !this.state.pressed});
   }
+
+  onSave = async (success, path) => {
+    success = true
+    console.log("in here!");
+    if(!success) return;
+    let imageUri;
+    const myNewImagePath = RNFS.DocumentDirectoryPath + 'my_folder'
+    
+    console.log(myNewImagePath);
+    try{
+        if(path == null){
+            // image has been saved to the camera roll
+            // Here I am assuming that the most recent photo in the camera roll is the saved image, you may want to check the filename
+            const images = await CameraRoll.getPhotos({first: 1});
+            if(images.length > 0){
+                imageUri = [0].image.uri;
+                console.log(imageUri);
+            }else{
+                console.log('Image path missing and no images in camera roll')
+                return;
+            }
+
+        } else{
+            imageUri = path
+        }
+
+        await RNFS.moveFile(imageUri, myNewImagePath)
+    } catch (e) {
+        console.log(e.message)
+    }
+}
+
 
   render() {
     return (
@@ -81,12 +115,15 @@ export default class CameraScreen extends Component {
               )}}
               saveComponent={<View style={styles.save}><Entypo name="save" size={40} style={styles.facebookIcon}/></View>}
               savePreference={() => {
+              
               return {
-                folder: 'RNSketchCanvas',
+                folder: 'Temp', 
                 filename: String(Math.ceil(Math.random() * 100000000)),
                 transparent: false,
+                includeImage: true,
                 imageType: 'png'
               }}}
+              onSketchSaved={this.onSave}
             />
             : 
             <View >
