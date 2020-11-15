@@ -18,7 +18,7 @@ export default class CameraScreen extends Component {
     this.viewShotRef = React.createRef();
 
     this.state = {
-      pressed: false,
+      paintBrushIconPressed: false,
       savedImageInfo: {},
       imageURI: '',
       imageSaved: false
@@ -45,7 +45,7 @@ export default class CameraScreen extends Component {
   }
 
   paintBrushPressed(){
-    this.setState({pressed: !this.state.pressed});
+    this.setState({paintBrushIconPressed: !this.state.paintBrushIconPressed});
   }
 
   captureScreen(){
@@ -84,7 +84,7 @@ export default class CameraScreen extends Component {
           captureAudio={false}>
           
          
-          {this.state.pressed ?
+          {this.state.paintBrushIconPressed ?
             <RNSketchCanvas
               defaultStrokeIndex={0}
               defaultStrokeWidth={5}
