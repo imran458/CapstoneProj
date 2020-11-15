@@ -99,8 +99,8 @@ export default StyleSheet.create({
   },
 
   savedImage: {
-    width: 200, 
-    height: 200
+    width: 300, 
+    height: 300
   }
 
 });

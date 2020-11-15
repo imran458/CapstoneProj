@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, PermissionsAndroid, Platform, Image} from 'react-native';
+import {View, Text, TouchableOpacity, PermissionsAndroid, Platform, Image} from 'react-native';
 import styles from '../Styles/CameraScreenStyles.js';
 import {RNCamera} from 'react-native-camera';
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
@@ -49,32 +49,18 @@ export default class CameraScreen extends Component {
   }
 
   captureScreen(){
-    this.ref.viewShot.capture().then(uri => {
+    this.viewShotRef.current.capture().then(uri => {
       console.log("do something with ", uri);
       this.setState({imageURI: uri});
    });
    
-   /*
-    The following code successfully takes a screenshot of the current camera view,
-    but doesn't get any of the sketches
-    
-    captureScreen({
-      format: "jpg",
-      quality: 0.8
-    })
-    .then(
-      uri => this.setState({ imageURI : uri }),
-      error => console.error("Something Went Wrong", error)
-      
-    );
-    */
     console.log("This is where the saved image is located: " + this.state.imageURI);
     this.setState({imageSaved: true});
   }
 
   render() {
     return (
-      <ViewShot style={styles.container} ref="viewShot" options={{ format: "jpg", quality: 0.9 }}>
+      <ViewShot style={styles.container} ref={this.viewShotRef} options={{ format: "jpg", quality: 0.9 }}>
          
         <RNCamera
           ref={(ref) => {this.CameraScreen = ref;}}
@@ -83,7 +69,7 @@ export default class CameraScreen extends Component {
           flashMode={RNCamera.Constants.FlashMode.auto}
           captureAudio={false}>
           
-         
+         <Text style={{alignSelf: 'center', position: 'absolute', top: '50%'}}>HELLOOOOOOOOOOO</Text>
           {this.state.paintBrushIconPressed ?
             <RNSketchCanvas
               defaultStrokeIndex={0}
