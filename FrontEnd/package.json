@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-community/cameraroll": "^4.0.1",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-firebase/app": "^8.4.5",
     "@react-navigation/native": "^5.7.3",
@@ -34,6 +35,7 @@
     "react-native-search-bar": "^3.5.1",
     "react-native-share": "^4.1.0",
     "react-native-vector-icons": "^7.1.0",
+    "react-native-view-shot": "^3.1.2",
     "react-native-wikitude-sdk": "github:joaquinlom/react-native-wikitude-sdk",
     "react-navigation": "^4.4.0",
     "react-redux": "^7.2.1",

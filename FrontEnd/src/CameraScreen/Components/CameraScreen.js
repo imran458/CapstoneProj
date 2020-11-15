@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Alert, TouchableOpacity, PermissionsAndroid} from 'react-native';
+import {View, Text, Alert, TouchableOpacity, PermissionsAndroid, Platform} from 'react-native';
 import styles from '../Styles/CameraScreenStyles.js';
 import {RNCamera} from 'react-native-camera';
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
@@ -7,9 +7,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import WikitudeView from 'react-native-wikitude-sdk';
-import {Wikitude_AR_LICENSE_KEY} from "@env";
-import RNFS from 'react-native-fs';
+import CameraRoll from "@react-native-community/cameraroll";
+import { captureScreen } from "react-native-view-shot";
 
 export default class CameraScreen extends Component {
   constructor() {
@@ -23,6 +22,27 @@ export default class CameraScreen extends Component {
       savedImageInfo: {}
     }
   }
+
+
+  async hasAndroidPermission() {
+    const permission = PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE;
+  
+    const hasPermission = await PermissionsAndroid.check(permission);
+    if (hasPermission) {
+      return true;
+    }
+  
+    const status = await PermissionsAndroid.request(permission);
+    return status === 'granted';
+  }
+  
+  async savePicture() {
+    if (Platform.OS === "android" && !(await hasAndroidPermission())) {
+      return;
+    }
+  
+    CameraRoll.save(tag, { type, album })
+  };
 
   async requestCameraPermission() {
     try {
@@ -51,41 +71,30 @@ export default class CameraScreen extends Component {
     this.setState({pressed: !this.state.pressed});
   }
 
-  onSave = async (success, path) => {
-    success = true
-    console.log("in here!");
-    if(!success) return;
-    let imageUri;
-    const myNewImagePath = RNFS.DocumentDirectoryPath + 'my_folder'
-    
-    console.log(myNewImagePath);
-    try{
-        if(path == null){
-            // image has been saved to the camera roll
-            // Here I am assuming that the most recent photo in the camera roll is the saved image, you may want to check the filename
-            const images = await CameraRoll.getPhotos({first: 1});
-            if(images.length > 0){
-                imageUri = [0].image.uri;
-                console.log(imageUri);
-            }else{
-                console.log('Image path missing and no images in camera roll')
-                return;
-            }
+  captureScreenFunction (){
 
-        } else{
-            imageUri = path
-        }
+    captureScreen({
+      format: "jpg",
+      quality: 0.8
+    })
+    .then(
+      uri => this.setState({ imageURI : uri }),
+      error => console.error("Oops, Something Went Wrong", error)
+    );
 
-        await RNFS.moveFile(imageUri, myNewImagePath)
-    } catch (e) {
-        console.log(e.message)
-    }
-}
+    this.screenFunction();
 
+  }
+
+  screenFunction (){
+    console.log(this.state.imageURI)
+    CameraRoll.saveToCameraRoll(this.state.imageURI,'photo')
+  }
 
   render() {
     return (
       <View style={styles.container}>
+         
         <RNCamera
           ref={(ref) => {
             this.CameraScreen = ref;
@@ -94,7 +103,8 @@ export default class CameraScreen extends Component {
           type={RNCamera.Constants.Type.back}
           flashMode={RNCamera.Constants.FlashMode.auto}
           captureAudio={false}>
-
+          
+         
           {this.state.pressed ?
             <RNSketchCanvas
               defaultStrokeIndex={0}
@@ -117,13 +127,15 @@ export default class CameraScreen extends Component {
               savePreference={() => {
               
               return {
-                folder: 'Temp', 
+                folder: null, 
                 filename: String(Math.ceil(Math.random() * 100000000)),
                 transparent: false,
                 includeImage: true,
                 imageType: 'png'
               }}}
-              onSketchSaved={this.onSave}
+
+              onSketchSaved={()=> this.captureScreenFunction()}
+              
             />
             : 
             <View >
@@ -135,16 +147,7 @@ export default class CameraScreen extends Component {
                 <FontAwesome5 name="paint-brush" size={50}/>
               </TouchableOpacity>
 
-              {/*<WikitudeView
-                ref="wikitudeView"
-                style={{ flex: 1 }}
-                url={'https://yourserver.com/yourwikitudestudioproject/'}
-                licenseKey={Wikitude_AR_LICENSE_KEY}
-                feature={WikitudeView.Geo}
-                onJsonReceived={this.onJsonReceived}
-                onFinishLoading={this.onFinishLoading}
-                onScreenCaptured={this.onScreenCaptured}
-              />*/}
+              
             </View>
 
             }
