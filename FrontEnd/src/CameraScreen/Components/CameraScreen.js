@@ -112,7 +112,7 @@ export default class CameraScreen extends Component {
             </View>
             }
         </RNCamera>
-        {this.state.imageSaved && this.state.imageURI !== '' ?  <Image style={{width: 200, height: 200,}} source={{uri: this.state.imageURI}}/> : null}
+        {this.state.imageSaved && this.state.imageURI !== '' ?  <Image style={styles.savedImage} source={{uri: this.state.imageURI}}/> : null}
       </ViewShot>
     );
   }
