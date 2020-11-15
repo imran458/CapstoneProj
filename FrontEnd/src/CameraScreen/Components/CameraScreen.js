@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Alert, TouchableOpacity, PermissionsAndroid, Platform} from 'react-native';
+import {View, Text, Alert, TouchableOpacity, PermissionsAndroid, Platform, Image} from 'react-native';
 import styles from '../Styles/CameraScreenStyles.js';
 import {RNCamera} from 'react-native-camera';
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
@@ -19,7 +19,9 @@ export default class CameraScreen extends Component {
 
     this.state = {
       pressed: false,
-      savedImageInfo: {}
+      savedImageInfo: {},
+      imageURI: '',
+      imageSaved: false
     }
   }
 
@@ -80,15 +82,12 @@ export default class CameraScreen extends Component {
     .then(
       uri => this.setState({ imageURI : uri }),
       error => console.error("Oops, Something Went Wrong", error)
+      
     );
 
-    this.screenFunction();
+    console.log("This is where the saved image is located: " + this.state.imageURI);
+    this.setState({imageSaved: true});
 
-  }
-
-  screenFunction (){
-    console.log(this.state.imageURI)
-    CameraRoll.saveToCameraRoll(this.state.imageURI,'photo')
   }
 
   render() {
@@ -151,7 +150,13 @@ export default class CameraScreen extends Component {
             </View>
 
             }
+            
         </RNCamera>
+        {this.state.imageSaved && this.state.imageURI !== '' ? 
+           
+            <Image style={{width: 50,
+              height: 50,}} source={{uri: this.state.imageURI}}/>
+          : null}
       </View>
     );
   }
