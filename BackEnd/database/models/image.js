@@ -14,8 +14,13 @@ const Image = db.define("image", {
 		type: Sequelize.STRING,
 		allowNull: false
 	},
-	location: {
-		type: Sequelize.STRING,
+	latitude: {
+		type: Sequelize.DECIMAL,
+		unique: true,
+		allowNull: false
+	},
+	longitude: {
+		type: Sequelize.DECIMAL,
 		unique: true,
 		allowNull: false
 	},

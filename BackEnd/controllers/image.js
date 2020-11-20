@@ -1,4 +1,5 @@
 const { Image } = require("../database/models");
+const { Op } = require("sequelize");
 
 const imageController = {
     upload: upload,
@@ -22,6 +23,9 @@ async function upload(req, res, next) {
         newName.pop();
         newName.join('.').replace(/ /g, "_");
         newName = newName + "_" + Date.now() + ".jpg";
+        const coordinates = JSON.parse(req.body.coordinates)
+        const latitude = coordinates[0]
+        const longitude = coordinates[1]
 
         const user = req.body.user
         if(!user){
@@ -39,7 +43,8 @@ async function upload(req, res, next) {
                 url: url,
                 name: newName,
                 user: user,
-                location: "()"
+                latitude: latitude,
+                longitude: longitude
             })
 
             res.status(200).send(url);
@@ -55,13 +60,46 @@ async function upload(req, res, next) {
 	}
 }
 
+function getRange(coordinates, distance){
+    const lat_diff = distance/69
+    const lat = [coordinates[0]-lat_diff, coordinates[0]+lat_diff]
+    const long_diff = distance/(Math.cos(coordinates[0]*Math.PI/180)*69)
+    const long = [coordinates[1]-long_diff, coordinates[1]+long_diff]
+    return {lat:lat, long:long}
+}
+
 async function getImages(req, res, next){
     try{
-        const images = await Image.findAll({
-            where: {
-                user: req.params.email
+        var images = [];
+        if(req.query.email){
+            images = await Image.findAll({
+                where: {
+                    user: req.query.email
+                }
+            })
+        }
+        else{
+            const distance = req.query.distance || 50
+            if(!req.query.coordinates){
+                res.status(400).send("Parameters not provided")
+                return;
             }
-        })
+            else{
+                const coordinates = JSON.parse(req.query.coordinates)
+                const range = getRange(coordinates, distance)
+                images = await Image.findAll({
+                    where: {
+                        lat: {
+                            [Op.between]: range.lat
+                        },
+                        long: {
+                            [Op.between]: range.long
+                        }
+                    }
+                })
+            }         
+        }
+
         res.status(200).json(images);
     } catch (err) {
         console.log(err)
