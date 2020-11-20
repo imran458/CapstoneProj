@@ -100,7 +100,8 @@ export default StyleSheet.create({
 
   savedImage: {
     width: 300, 
-    height: 300
+    height: 300,
+    backgroundColor: 'transparent'
   }
 
 });

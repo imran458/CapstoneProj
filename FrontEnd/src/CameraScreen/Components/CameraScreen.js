@@ -14,6 +14,8 @@ export default class CameraScreen extends Component {
     super();
     if (Platform.OS === 'android') {
       this.requestCameraPermission();
+      this.requestStorageWritePermissions();
+      this.requestStorageReadPermissions();
     }
     this.viewShotRef = React.createRef();
 
@@ -22,6 +24,36 @@ export default class CameraScreen extends Component {
       savedImageInfo: {},
       imageURI: '',
       imageSaved: false
+    }
+  }
+
+  async requestStorageReadPermissions() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'Diggraffiti',
+          message: 'Let Diggrafiti Read From External Storage',
+        },
+      );
+      granted === PermissionsAndroid.RESULTS.GRANTED ? console.log('You can read from external storage') : console.log('Cannot read from external storage');
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  async requestStorageWritePermissions() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Diggraffiti',
+          message: 'Let Diggrafiti Write to External Storage',
+        },
+      );
+      granted === PermissionsAndroid.RESULTS.GRANTED ? console.log('You can write to external storage') : console.log('Cannot write to external storage');
+    } catch (err) {
+      console.warn(err);
     }
   }
 
@@ -48,17 +80,19 @@ export default class CameraScreen extends Component {
     this.setState({paintBrushIconPressed: !this.state.paintBrushIconPressed});
   }
 
-  captureScreen(){
-    this.viewShotRef.current.capture().then(uri => {
-      console.log("do something with ", uri);
-      this.setState({imageURI: uri});
-   });
-   
-    console.log("This is where the saved image is located: " + this.state.imageURI);
-    this.setState({imageSaved: true});
+  captureSketch(success, path){
+    if (success){
+      console.log("saved sketch location: " + path);
+      let url = "file://" + path;
+      this.setState({imageSaved: success});
+      this.setState({imageURI: url});
+    }else{
+      console.log("Image didn't save!");
+    }
   }
 
   render() {
+    console.log("image uri: " + this.state.imageURI);
     return (
       <ViewShot style={styles.container} ref={this.viewShotRef} options={{ format: "jpg", quality: 0.9 }}>
          
@@ -68,8 +102,7 @@ export default class CameraScreen extends Component {
           type={RNCamera.Constants.Type.back}
           flashMode={RNCamera.Constants.FlashMode.auto}
           captureAudio={false}>
-          
-         <Text style={{alignSelf: 'center', position: 'absolute', top: '50%'}}>HELLOOOOOOOOOOO</Text>
+        
           {this.state.paintBrushIconPressed ?
             <RNSketchCanvas
               defaultStrokeIndex={0}
@@ -82,8 +115,8 @@ export default class CameraScreen extends Component {
               eraseComponent={<View style={styles.eraser}><MaterialCommunityIcons name="eraser" size={45} /></View>}
               strokeComponent={color => (<View style={[{ backgroundColor: color }, styles.strokeColorButton]}/>)}
               saveComponent={<View style={styles.save}><Entypo name="save" size={40} style={styles.facebookIcon}/></View>}
-              savePreference={() => {return {folder: null, filename: String(Math.ceil(Math.random() * 100000000)),transparent: false, includeImage: true, imageType: 'jpg'}}}
-              onSketchSaved={()=> this.captureScreen()} 
+              savePreference={() => {return {folder: null, filename: String(Math.ceil(Math.random() * 100000000)),transparent: true, includeImage: true, imageType: 'jpg'}}}
+              onSketchSaved={( success, path)=> this.captureSketch(success, path)} 
               strokeSelectedComponent={(color) => {return (<View style={[{backgroundColor: color, borderWidth: 2 }, styles.strokeColorButton]}/>)}}
               strokeWidthComponent={(w) => {return (<View style={styles.strokeWidthButton}><View  style={{backgroundColor: 'white', marginHorizontal: 2.5,width: Math.sqrt(w / 3) * 10, height: Math.sqrt(w / 3) * 10, borderRadius: Math.sqrt(w / 3) * 10 / 2 }} /></View>)}}
             />
