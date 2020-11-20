@@ -91,8 +91,6 @@ class LoginScreen extends Component{
     }
 
     sendUserInfoToBackend(firstName, lastName, email){
-        
-        //let url = '' + API_URLS + '/api/auth';
         let url = 'localhost:1234' + '/api/auth';
         console.log("this is the url: " + url);
 

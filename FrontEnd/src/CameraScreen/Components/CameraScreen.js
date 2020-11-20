@@ -7,17 +7,20 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import ViewShot, { captureScreen } from "react-native-view-shot";
+import { connect } from 'react-redux'
+import {imageToBlob} from 'react-native-image-to-blob';
+import axios from 'axios';
 
-export default class CameraScreen extends Component {
-  constructor() {
+class CameraScreen extends Component {
+  constructor(props) {
     super();
     if (Platform.OS === 'android') {
       this.requestCameraPermission();
       this.requestStorageWritePermissions();
       this.requestStorageReadPermissions();
     }
-    this.viewShotRef = React.createRef();
+
+    console.log(props);
 
     this.state = {
       paintBrushIconPressed: false,
@@ -85,16 +88,45 @@ export default class CameraScreen extends Component {
       console.log("saved sketch location: " + path);
       let url = "file://" + path;
       this.setState({imageSaved: success});
-      this.setState({imageURI: url});
+      this.setState({imageURI: url},()=>{this.sendSketchToBackEnd()});
     }else{
       console.log("Image didn't save!");
     }
   }
 
+  async sendSketchToBackEnd(){
+    let email = this.props.email;
+    let sketchLocation = [23.4556, 46.435];
+    let imageFile = await imageToBlob(this.state.imageURI);
+    console.log("this is the image file: " + imageFile);
+    console.log("user email: " + email);
+    console.log("sketch location: " + sketchLocation);
+
+    let bodyFromData = new FormData();
+    bodyFromData.append("file", imageFile);
+    bodyFromData.append("user", email);
+    bodyFromData.append("coordinates", sketchLocation);
+
+    axios({
+      method: 'post',
+      url: 'http://localhost:1234/api/image/upload',
+      headers: {'Content-Type': 'multipart/form-data' },
+      data: bodyFromData
+    })
+    .then((response) => { 
+
+      console.log(response);
+      
+    }, (error) => {
+      console.log(error)
+
+    });
+  }
+
   render() {
     console.log("image uri: " + this.state.imageURI);
     return (
-      <ViewShot style={styles.container} ref={this.viewShotRef} options={{ format: "jpg", quality: 0.9 }}>
+      <View style={styles.container}>
          
         <RNCamera
           ref={(ref) => {this.CameraScreen = ref;}}
@@ -132,7 +164,16 @@ export default class CameraScreen extends Component {
             }
         </RNCamera>
         {this.state.imageSaved && this.state.imageURI !== '' ?  <Image style={styles.savedImage} source={{uri: this.state.imageURI}}/> : null}
-      </ViewShot>
+      </View>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+      email: state.loginReducer.email
+  }
+}
+
+export default connect(mapStateToProps) (CameraScreen);
