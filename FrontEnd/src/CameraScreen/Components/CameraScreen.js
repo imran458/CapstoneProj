@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, PermissionsAndroid} from 'react-native';
+import {View, TouchableOpacity, PermissionsAndroid, Platform, Image} from 'react-native';
 import styles from '../Styles/CameraScreenStyles.js';
 import {RNCamera} from 'react-native-camera';
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
@@ -7,18 +7,56 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import WikitudeView from 'react-native-wikitude-sdk';
-import {Wikitude_AR_LICENSE_KEY} from "@env"
+import { connect } from 'react-redux';
+import RNFetchBlob from 'rn-fetch-blob';
+import axios from 'axios';
 
-export default class CameraScreen extends Component {
-  constructor() {
+class CameraScreen extends Component {
+  constructor(props) {
     super();
     if (Platform.OS === 'android') {
       this.requestCameraPermission();
+      this.requestStorageWritePermissions();
+      this.requestStorageReadPermissions();
     }
 
+    console.log(props);
+
     this.state = {
-      pressed: false
+      paintBrushIconPressed: false,
+      savedImageInfo: {},
+      imageURI: '',
+      imageSaved: false
+    }
+  }
+
+  async requestStorageReadPermissions() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        {
+          title: 'Diggraffiti',
+          message: 'Let Diggrafiti Read From External Storage',
+        },
+      );
+      granted === PermissionsAndroid.RESULTS.GRANTED ? console.log('You can read from external storage') : console.log('Cannot read from external storage');
+    } catch (err) {
+      console.warn(err);
+    }
+  }
+
+  async requestStorageWritePermissions() {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        {
+          title: 'Diggraffiti',
+          message: 'Let Diggrafiti Write to External Storage',
+        },
+      );
+      granted === PermissionsAndroid.RESULTS.GRANTED ? console.log('You can write to external storage') : console.log('Cannot write to external storage');
+    } catch (err) {
+      console.warn(err);
     }
   }
 
@@ -31,11 +69,7 @@ export default class CameraScreen extends Component {
           message: 'Let Diggrafiti Access the Camera',
         },
       );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log('You can use the camera');
-      } else {
-        console.log('Camera permission denied');
-      }
+      granted === PermissionsAndroid.RESULTS.GRANTED ? console.log('You can use the camera') : console.log('Camera permission denied');
     } catch (err) {
       console.warn(err);
     }
@@ -46,73 +80,91 @@ export default class CameraScreen extends Component {
   }
 
   paintBrushPressed(){
-    this.setState({pressed: !this.state.pressed});
+    this.setState({paintBrushIconPressed: !this.state.paintBrushIconPressed});
+  }
+
+  captureSketch(success, path){
+    if (success){
+      let url = "file://" + path;
+      this.setState({imageSaved: success});
+      this.setState({imageURI: url},()=>{this.sendSketchToBackEnd()});
+    }else{
+      console.log("Image didn't save!");
+    }
+  }
+
+  sendSketchToBackEnd(){
+    let email = this.props.email;
+    let sketchLocation = [23.4556, 46.435] //dummy data ;
+    let imageFileUri = this.state.imageURI;
+    let splittedFileUri = imageFileUri.split("/");
+    let file = splittedFileUri[splittedFileUri.length-1];
+
+    
+    RNFetchBlob.fetch('POST', 'http://localhost:1234/api/image/upload', {
+      'Content-Type' : 'multipart/form-data',
+    },[
+      {name: "file", filename : file, data: RNFetchBlob.wrap(imageFileUri)},
+      {name: 'user', data: email},
+      {name: 'coordinates', data : String(sketchLocation)}
+    ]
+  ).then((response) => {
+    console.log(response);
+  }).catch((error) => {
+    console.log(error);
+  })
   }
 
   render() {
     return (
       <View style={styles.container}>
+         
         <RNCamera
-          ref={(ref) => {
-            this.CameraScreen = ref;
-          }}
-          style={{position: 'absolute',top: 0,left: 0,right: 0, bottom: 0}}
+          ref={(ref) => {this.CameraScreen = ref;}}
+          style={styles.cameraView}
           type={RNCamera.Constants.Type.back}
           flashMode={RNCamera.Constants.FlashMode.auto}
           captureAudio={false}>
-
-          {this.state.pressed ?
+        
+          {this.state.paintBrushIconPressed ?
             <RNSketchCanvas
               defaultStrokeIndex={0}
               defaultStrokeWidth={5}
               containerStyle={styles.sketchContainer}
               canvasStyle={styles.sketchCanvas}
-              closeComponent={<View style={styles.close}><MaterialCommunityIcons name="window-close" size={40}/></View>}
               onClosePressed={() => this.paintBrushPressed()}
+              closeComponent={<View style={styles.close}><MaterialCommunityIcons name="window-close" size={40}/></View>}
               clearComponent={<View style={styles.trash}><Fontisto name="trash" size={35}/></View>}
               eraseComponent={<View style={styles.eraser}><MaterialCommunityIcons name="eraser" size={45} /></View>}
               strokeComponent={color => (<View style={[{ backgroundColor: color }, styles.strokeColorButton]}/>)}
-              strokeSelectedComponent={(color, index, changed) => {
-              return (<View style={[{backgroundColor: color, borderWidth: 2 }, styles.strokeColorButton]}/>)}}
-              strokeWidthComponent={(w) => {
-              return (<View style={styles.strokeWidthButton}>
-                          <View  style={{backgroundColor: 'white', marginHorizontal: 2.5,width: Math.sqrt(w / 3) * 10, height: Math.sqrt(w / 3) * 10, borderRadius: Math.sqrt(w / 3) * 10 / 2 }} />
-                      </View>
-              )}}
               saveComponent={<View style={styles.save}><Entypo name="save" size={40} style={styles.facebookIcon}/></View>}
-              savePreference={() => {
-              return {
-                folder: 'RNSketchCanvas',
-                filename: String(Math.ceil(Math.random() * 100000000)),
-                transparent: false,
-                imageType: 'png'
-              }}}
+              savePreference={() => {return {folder: null, filename: String(Math.ceil(Math.random() * 100000000)),transparent: true, imageType: 'png'}}}
+              onSketchSaved={( success, path)=> this.captureSketch(success, path)} 
+              strokeSelectedComponent={(color) => {return (<View style={[{backgroundColor: color, borderWidth: 2 }, styles.strokeColorButton]}/>)}}
+              strokeWidthComponent={(w) => {return (<View style={styles.strokeWidthButton}><View  style={{backgroundColor: 'white', marginHorizontal: 2.5,width: Math.sqrt(w / 3) * 10, height: Math.sqrt(w / 3) * 10, borderRadius: Math.sqrt(w / 3) * 10 / 2 }} /></View>)}}
             />
             : 
-            <View >
+            <View>
               <TouchableOpacity style={styles.mapMarkerIcon}>
                 <Fontisto name="map-marker-alt" size={42} onPress={() => this.jumpToMapScreen()}/>
               </TouchableOpacity>
-
               <TouchableOpacity style={styles.paintBrush} onPress={() => this.paintBrushPressed()}>
                 <FontAwesome5 name="paint-brush" size={50}/>
               </TouchableOpacity>
-
-              {/*<WikitudeView
-                ref="wikitudeView"
-                style={{ flex: 1 }}
-                url={'https://yourserver.com/yourwikitudestudioproject/'}
-                licenseKey={Wikitude_AR_LICENSE_KEY}
-                feature={WikitudeView.Geo}
-                onJsonReceived={this.onJsonReceived}
-                onFinishLoading={this.onFinishLoading}
-                onScreenCaptured={this.onScreenCaptured}
-              />*/}
             </View>
-
             }
         </RNCamera>
+        {this.state.imageSaved && this.state.imageURI !== '' ?  <Image style={styles.savedImage} source={{uri: this.state.imageURI}}/> : null}
       </View>
     );
   }
 }
+
+const mapStateToProps = (state) => {
+  console.log(state);
+  return {
+    email: state.loginReducer.email
+  }
+}
+
+export default connect(mapStateToProps) (CameraScreen);

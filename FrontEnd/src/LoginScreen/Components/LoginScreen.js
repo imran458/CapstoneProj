@@ -91,11 +91,12 @@ class LoginScreen extends Component{
     }
 
     sendUserInfoToBackend(firstName, lastName, email){
-        let url = '' + API_URL + '/api/auth';
-        
+        let url = 'localhost:1234' + '/api/auth';
+        console.log("this is the url: " + url);
+
         axios({
             method: 'post',
-            url: url,
+            url: 'http://localhost:1234/api/auth',
             data: {first: firstName, last: lastName, email: email}
           })
           .then((response) => { 
@@ -103,10 +104,10 @@ class LoginScreen extends Component{
             console.log(response);
             this.jumpToCameraScreen();
           }, (error) => {
-            
             console.log(error)
       
           });
+
     }
 
     render() {
@@ -127,10 +128,6 @@ class LoginScreen extends Component{
                     <AntDesign name="camera" size={30} />       
                 </TouchableOpacity>
 
-                {/*<TouchableOpacity style={{position: 'absolute', bottom: '20%'}} onPress={()=> this.jumpToWiki()}>
-                    <Text>Wiki Test</Text>
-                </TouchableOpacity>
-                */}
             </View>
         );
     }
