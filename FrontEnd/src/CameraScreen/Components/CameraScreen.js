@@ -7,7 +7,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import RNFetchBlob from 'rn-fetch-blob';
 import axios from 'axios';
 
 class CameraScreen extends Component {
@@ -84,7 +85,6 @@ class CameraScreen extends Component {
 
   captureSketch(success, path){
     if (success){
-      console.log("saved sketch location: " + path);
       let url = "file://" + path;
       this.setState({imageSaved: success});
       this.setState({imageURI: url},()=>{this.sendSketchToBackEnd()});
@@ -93,53 +93,29 @@ class CameraScreen extends Component {
     }
   }
 
-  convertDataUriToBlob(inputURI){
-    let binaryVal; 
-    let inputMIME = inputURI.split(',')[0].split(':')[1].split(';')[0]; 
-
-    if (inputURI.split(',')[0].indexOf('base64') >= 0) 
-        binaryVal = atob(inputURI.split(',')[1]); 
-    else
-        binaryVal = unescape(inputURI.split(',')[1]); 
-
-    let blobArray = []; 
-    for (let index = 0; index < binaryVal.length; index++) { 
-        blobArray.push(binaryVal.charCodeAt(index)); 
-    } 
-
-    return new Blob([blobArray], { type: inputMIME }); 
-  }
-
   sendSketchToBackEnd(){
     let email = this.props.email;
-    let sketchLocation = [23.4556, 46.435];
+    let sketchLocation = [23.4556, 46.435] //dummy data ;
+    let imageFileUri = this.state.imageURI;
+    let splittedFileUri = imageFileUri.split("/");
+    let file = splittedFileUri[splittedFileUri.length-1];
 
-    let imageFile = this.state.imageURI;
-    let blob = this.convertDataUriToBlob(imageFile);
     
-    let bodyFromData = new FormData();
-    bodyFromData.append("file", blob);
-    bodyFromData.append("user", email);
-    bodyFromData.append("coordinates", sketchLocation);
-
-    axios({
-      method: 'post',
-      url: 'http://localhost:1234/api/image/upload',
-      headers: {'Content-Type': 'multipart/form-data' },
-      data: bodyFromData
-    })
-    .then((response) => { 
-
-      console.log(response);
-      
-    }, (error) => {
-      console.log(error)
-
-    });
+    RNFetchBlob.fetch('POST', 'http://localhost:1234/api/image/upload', {
+      'Content-Type' : 'multipart/form-data',
+    },[
+      {name: "file", filename : file, data: RNFetchBlob.wrap(imageFileUri)},
+      {name: 'user', data: email},
+      {name: 'coordinates', data : String(sketchLocation)}
+    ]
+  ).then((response) => {
+    console.log(response);
+  }).catch((error) => {
+    console.log(error);
+  })
   }
 
   render() {
-    console.log("image uri: " + this.state.imageURI);
     return (
       <View style={styles.container}>
          
@@ -187,7 +163,7 @@ class CameraScreen extends Component {
 const mapStateToProps = (state) => {
   console.log(state);
   return {
-      email: state.loginReducer.email
+    email: state.loginReducer.email
   }
 }
 
