@@ -41,7 +41,8 @@
     "react-native-wikitude-sdk": "github:joaquinlom/react-native-wikitude-sdk",
     "react-navigation": "^4.4.0",
     "react-redux": "^7.2.1",
-    "redux": "^4.0.5"
+    "redux": "^4.0.5",
+    "rn-fetch-blob": "^0.12.0"
   },
   "devDependencies": {
     "@babel/core": "^7.11.6",

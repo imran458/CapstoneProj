@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, PermissionsAndroid, Platform, Image} from 'react-native';
+import {View, TouchableOpacity, PermissionsAndroid, Platform, Image} from 'react-native';
 import styles from '../Styles/CameraScreenStyles.js';
 import {RNCamera} from 'react-native-camera';
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
@@ -8,7 +8,6 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { connect } from 'react-redux'
-import {imageToBlob} from 'react-native-image-to-blob';
 import axios from 'axios';
 
 class CameraScreen extends Component {
@@ -94,16 +93,32 @@ class CameraScreen extends Component {
     }
   }
 
-  async sendSketchToBackEnd(){
+  convertDataUriToBlob(inputURI){
+    let binaryVal; 
+    let inputMIME = inputURI.split(',')[0].split(':')[1].split(';')[0]; 
+
+    if (inputURI.split(',')[0].indexOf('base64') >= 0) 
+        binaryVal = atob(inputURI.split(',')[1]); 
+    else
+        binaryVal = unescape(inputURI.split(',')[1]); 
+
+    let blobArray = []; 
+    for (let index = 0; index < binaryVal.length; index++) { 
+        blobArray.push(binaryVal.charCodeAt(index)); 
+    } 
+
+    return new Blob([blobArray], { type: inputMIME }); 
+  }
+
+  sendSketchToBackEnd(){
     let email = this.props.email;
     let sketchLocation = [23.4556, 46.435];
-    let imageFile = await imageToBlob(this.state.imageURI);
-    console.log("this is the image file: " + imageFile);
-    console.log("user email: " + email);
-    console.log("sketch location: " + sketchLocation);
 
+    let imageFile = this.state.imageURI;
+    let blob = this.convertDataUriToBlob(imageFile);
+    
     let bodyFromData = new FormData();
-    bodyFromData.append("file", imageFile);
+    bodyFromData.append("file", blob);
     bodyFromData.append("user", email);
     bodyFromData.append("coordinates", sketchLocation);
 
@@ -147,7 +162,7 @@ class CameraScreen extends Component {
               eraseComponent={<View style={styles.eraser}><MaterialCommunityIcons name="eraser" size={45} /></View>}
               strokeComponent={color => (<View style={[{ backgroundColor: color }, styles.strokeColorButton]}/>)}
               saveComponent={<View style={styles.save}><Entypo name="save" size={40} style={styles.facebookIcon}/></View>}
-              savePreference={() => {return {folder: null, filename: String(Math.ceil(Math.random() * 100000000)),transparent: true, includeImage: true, imageType: 'jpg'}}}
+              savePreference={() => {return {folder: null, filename: String(Math.ceil(Math.random() * 100000000)),transparent: true, imageType: 'png'}}}
               onSketchSaved={( success, path)=> this.captureSketch(success, path)} 
               strokeSelectedComponent={(color) => {return (<View style={[{backgroundColor: color, borderWidth: 2 }, styles.strokeColorButton]}/>)}}
               strokeWidthComponent={(w) => {return (<View style={styles.strokeWidthButton}><View  style={{backgroundColor: 'white', marginHorizontal: 2.5,width: Math.sqrt(w / 3) * 10, height: Math.sqrt(w / 3) * 10, borderRadius: Math.sqrt(w / 3) * 10 / 2 }} /></View>)}}
