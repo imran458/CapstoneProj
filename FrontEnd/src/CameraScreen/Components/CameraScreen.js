@@ -138,7 +138,7 @@ class CameraScreen extends Component {
               eraseComponent={<View style={styles.eraser}><MaterialCommunityIcons name="eraser" size={45} /></View>}
               strokeComponent={color => (<View style={[{ backgroundColor: color }, styles.strokeColorButton]}/>)}
               saveComponent={<View style={styles.save}><Entypo name="save" size={40} style={styles.facebookIcon}/></View>}
-              savePreference={() => {return {folder: null, filename: String(Math.ceil(Math.random() * 100000000)),transparent: true, imageType: 'png'}}}
+              savePreference={() => {return {folder: null, filename: String(Math.ceil(Math.random() * 100000000)),transparent: true, imageType: 'jpg'}}}
               onSketchSaved={( success, path)=> this.captureSketch(success, path)} 
               strokeSelectedComponent={(color) => {return (<View style={[{backgroundColor: color, borderWidth: 2 }, styles.strokeColorButton]}/>)}}
               strokeWidthComponent={(w) => {return (<View style={styles.strokeWidthButton}><View  style={{backgroundColor: 'white', marginHorizontal: 2.5,width: Math.sqrt(w / 3) * 10, height: Math.sqrt(w / 3) * 10, borderRadius: Math.sqrt(w / 3) * 10 / 2 }} /></View>)}}
