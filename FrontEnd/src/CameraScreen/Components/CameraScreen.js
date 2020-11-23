@@ -102,11 +102,13 @@ class CameraScreen extends Component {
 
     
     RNFetchBlob.fetch('POST', 'http://localhost:1234/api/image/upload', {
+      Authorization : "Bearer access-token",
+      otherHeader : "foo",
       'Content-Type' : 'multipart/form-data',
     },[
       {name: "file", filename : file, data: RNFetchBlob.wrap(imageFileUri)},
       {name: 'user', data: email},
-      {name: 'coordinates', data : String(sketchLocation)}
+      {name: 'coordinates', data : JSON.stringify(sketchLocation)}
     ]
   ).then((response) => {
     console.log(response);
