@@ -164,6 +164,16 @@ export default StyleSheet.create({
     position: 'absolute', 
     top: 15,
     left: '6%'
+  },
+
+  image: {
+    position: 'absolute',
+    top: '20%',
+    left: '2.5%',
+    width: 300,
+    height: 300,
+    backgroundColor: 'white'
+    
   }
 
 });
