@@ -102,6 +102,68 @@ export default StyleSheet.create({
     width: 300, 
     height: 300,
     backgroundColor: 'transparent'
+  },
+
+  imageNameInput: {
+    height: 40,
+    width: 250,
+    backgroundColor: '#FFFFFF',
+    paddingLeft: 10,
+    marginBottom: 20,
+    top: '35%',
+    position: 'absolute'
+  },
+
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: 'rgba(0,0,0,0.5)',
+    marginTop: 0
+  },
+
+  modalView: {
+    margin: 20,
+    width: '70%',
+    top: '25%',
+    height: '35%',
+    backgroundColor: "#e5e5e5",
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    position: 'absolute'
+  },
+  
+  cancelText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
+    position: 'absolute',
+    top: '26%',
+    left: '34%',
+    fontFamily: 'sans-serif-thin'
+  },
+
+  cancelButton: {
+    backgroundColor: "#F194FF",
+    top: '119%',
+    left: '0%',
+    height: '20%',
+    width: '70%',
+    position: 'absolute'
+  },
+
+  editIcon: {
+    position: 'absolute', 
+    top: 15,
+    left: '6%'
   }
 
 });
