@@ -197,6 +197,7 @@ dependencies {
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation 'com.android.support:multidex:1.0.3'
     implementation project(':react-native-fs')
+    implementation project(':react-native-image-tools-wm')
 
     compile project(':@react-native-community_cameraroll')
 

@@ -7,6 +7,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import Fontisto from 'react-native-vector-icons/Fontisto';
 import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import ViewShot from "react-native-view-shot";
+import RNImageTools from 'react-native-image-tools-wm';
 import { connect } from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
 
@@ -18,8 +20,8 @@ class CameraScreen extends Component {
       this.requestStorageWritePermissions();
       this.requestStorageReadPermissions();
     }
-
     console.log(props);
+    this.viewShotRef = React.createRef();
 
     this.state = {
       paintBrushIconPressed: false,
@@ -27,7 +29,10 @@ class CameraScreen extends Component {
       imageName: '',
       imageNameSet: false,
       modalVisible: false,
-      imageURI: '',
+      sketchImageURI: '',
+      backgroundImageURI: '',
+      mergedImageURI: '',
+      backgroundTaken: false
     }
   }
 
@@ -84,19 +89,40 @@ class CameraScreen extends Component {
     this.setState({paintBrushIconPressed: !this.state.paintBrushIconPressed});
   }
 
-  captureSketch(success, path){
+  async captureImages(succes, path){
+    await this.captureBackground();
+    await this.captureSketch(succes, path);
+    this.imageMerger();
+  }
+
+  imageMerger(){
+    RNImageTools.merge([this.state.backgroundImageURI,this.state.sketchImageURI]).then(({ uri, width, height }) => {
+      this.setState({mergedImageURI: uri}),()=>{console.log(this.state.mergedImageURI)};
+      this.sendSketchToBackEnd();
+  }).catch(console.error);
+    
+  }
+
+  async captureSketch(success, path){
+    let url = '';
     if (success){
-      let url = "file://" + path;
-      this.setState({imageURI: url},()=>{this.sendSketchToBackEnd()});
+      url = "file://" + path;
+      this.setState({sketchImageURI: url},()=>{console.log(this.state.sketchImageURI)});
     }else{
       console.log("Image didn't save!");
     }
+    return url;
+  }
+
+  async captureBackground(){
+    let backgroundURI = await this.viewShotRef.current.capture().then(uri => uri);
+    this.setState({backgroundImageURI: backgroundURI}), ()=>{console.log(this.state.backgroundImageURI)};
   }
 
   sendSketchToBackEnd(){
     let email = this.props.email;
     let sketchLocation = [23.4556, 46.435] //dummy data ;
-    let imageFileUri = this.state.imageURI;
+    let imageFileUri = this.state.mergedImageURI;
     let splittedFileUri = imageFileUri.split("/");
     let file = splittedFileUri[splittedFileUri.length-1];
 
@@ -117,8 +143,7 @@ class CameraScreen extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-         
+      <ViewShot style={styles.container} ref={this.viewShotRef} options={{ format: "png", quality: 0.9 }}> 
         <RNCamera
           ref={(ref) => {this.CameraScreen = ref;}}
           style={styles.cameraView}
@@ -139,7 +164,7 @@ class CameraScreen extends Component {
               strokeComponent={color => (<View style={[{ backgroundColor: color }, styles.strokeColorButton]}/>)}
               saveComponent={<View style={styles.save}><Entypo name="save" size={40} style={styles.facebookIcon}/></View>}
               savePreference={() => {return {folder: null, filename: String(Math.ceil(Math.random() * 100000000)), transparent: true, imageType: 'png'}}}
-              onSketchSaved={( success, path)=> this.captureSketch(success, path)} 
+              onSketchSaved={( success, path)=> this.captureImages(success, path)} 
               strokeSelectedComponent={(color) => {return (<View style={[{backgroundColor: color, borderWidth: 2 }, styles.strokeColorButton]}/>)}}
               strokeWidthComponent={(w) => {return (<View style={styles.strokeWidthButton}><View  style={{backgroundColor: 'white', marginHorizontal: 2.5,width: Math.sqrt(w / 3) * 10, height: Math.sqrt(w / 3) * 10, borderRadius: Math.sqrt(w / 3) * 10 / 2 }} /></View>)}}
             />
@@ -179,7 +204,7 @@ class CameraScreen extends Component {
             </View>
             }
         </RNCamera>
-      </View>
+      </ViewShot>
     );
   }
 }
