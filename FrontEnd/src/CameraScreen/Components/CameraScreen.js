@@ -25,14 +25,11 @@ class CameraScreen extends Component {
 
     this.state = {
       paintBrushIconPressed: false,
-      savedImageInfo: {},
       imageName: '',
-      imageNameSet: false,
       modalVisible: false,
       sketchImageURI: '',
       backgroundImageURI: '',
       mergedImageURI: '',
-      backgroundTaken: false
     }
   }
 
