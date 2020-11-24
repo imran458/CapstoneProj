@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, PermissionsAndroid, Platform, Image} from 'react-native';
+import {View, TouchableOpacity, PermissionsAndroid, Platform, Modal, Text, TextInput} from 'react-native';
 import styles from '../Styles/CameraScreenStyles.js';
 import {RNCamera} from 'react-native-camera';
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
@@ -9,7 +9,6 @@ import Entypo from 'react-native-vector-icons/Entypo';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { connect } from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
-import axios from 'axios';
 
 class CameraScreen extends Component {
   constructor(props) {
@@ -25,8 +24,10 @@ class CameraScreen extends Component {
     this.state = {
       paintBrushIconPressed: false,
       savedImageInfo: {},
+      imageName: '',
+      imageNameSet: false,
+      modalVisible: false,
       imageURI: '',
-      imageSaved: false
     }
   }
 
@@ -86,7 +87,6 @@ class CameraScreen extends Component {
   captureSketch(success, path){
     if (success){
       let url = "file://" + path;
-      this.setState({imageSaved: success});
       this.setState({imageURI: url},()=>{this.sendSketchToBackEnd()});
     }else{
       console.log("Image didn't save!");
@@ -102,8 +102,6 @@ class CameraScreen extends Component {
 
     
     RNFetchBlob.fetch('POST', 'http://localhost:1234/api/image/upload', {
-      Authorization : "Bearer access-token",
-      otherHeader : "foo",
       'Content-Type' : 'multipart/form-data',
     },[
       {name: "file", filename : file, data: RNFetchBlob.wrap(imageFileUri)},
@@ -140,7 +138,7 @@ class CameraScreen extends Component {
               eraseComponent={<View style={styles.eraser}><MaterialCommunityIcons name="eraser" size={45} /></View>}
               strokeComponent={color => (<View style={[{ backgroundColor: color }, styles.strokeColorButton]}/>)}
               saveComponent={<View style={styles.save}><Entypo name="save" size={40} style={styles.facebookIcon}/></View>}
-              savePreference={() => {return {folder: null, filename: String(Math.ceil(Math.random() * 100000000)),transparent: true, imageType: 'png'}}}
+              savePreference={() => {return {folder: null, filename: String(Math.ceil(Math.random() * 100000000)), transparent: true, imageType: 'png'}}}
               onSketchSaved={( success, path)=> this.captureSketch(success, path)} 
               strokeSelectedComponent={(color) => {return (<View style={[{backgroundColor: color, borderWidth: 2 }, styles.strokeColorButton]}/>)}}
               strokeWidthComponent={(w) => {return (<View style={styles.strokeWidthButton}><View  style={{backgroundColor: 'white', marginHorizontal: 2.5,width: Math.sqrt(w / 3) * 10, height: Math.sqrt(w / 3) * 10, borderRadius: Math.sqrt(w / 3) * 10 / 2 }} /></View>)}}
@@ -153,10 +151,34 @@ class CameraScreen extends Component {
               <TouchableOpacity style={styles.paintBrush} onPress={() => this.paintBrushPressed()}>
                 <FontAwesome5 name="paint-brush" size={50}/>
               </TouchableOpacity>
+              <TouchableOpacity style={styles.editIcon} onPress={() => { this.setState({modalVisible: true})}}>
+                <Entypo name="pencil" color={'#2d2d2d'} size={45} />
+              </TouchableOpacity>
+
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={this.state.modalVisible}
+                onRequestClose={() => {Alert.alert("Modal has been closed.");}}
+              >
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                    <TextInput
+                      placeholder="Please enter a name for the sketch"
+                      autoFocus={true}
+                      placeholderTextColor='#000000'
+                      style={styles.imageNameInput}
+                      onChangeText={(imageName) => this.setState({imageName})}
+                    />
+                    <TouchableOpacity style={{ ...styles.cancelButton, backgroundColor: "grey" }} onPress={() => {this.setState({modalVisible: false})}}>
+                      <Text style={styles.cancelText}>Cancel</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
             </View>
             }
         </RNCamera>
-        {this.state.imageSaved && this.state.imageURI !== '' ?  <Image style={styles.savedImage} source={{uri: this.state.imageURI}}/> : null}
       </View>
     );
   }
