@@ -65,7 +65,7 @@ function getRange(coordinates, distance){
     const lat = [coordinates[0]-lat_diff, coordinates[0]+lat_diff]
     const long_diff = distance/(Math.cos(coordinates[0]*Math.PI/180)*69)
     const long = [coordinates[1]-long_diff, coordinates[1]+long_diff]
-    return {lat:lat, long:long}
+    return {latitude:lat, longitude:long}
 }
 
 async function getImages(req, res, next){
@@ -81,8 +81,7 @@ async function getImages(req, res, next){
         else{
             const distance = req.query.distance || 50
             if(!req.query.coordinates){
-                res.status(400).send("Parameters not provided")
-                return;
+                images = await Image.findAll()
             }
             else{
                 const coordinates = JSON.parse(req.query.coordinates)
