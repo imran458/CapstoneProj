@@ -11,7 +11,7 @@ import ViewShot from "react-native-view-shot";
 import RNImageTools from 'react-native-image-tools-wm';
 import { connect } from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
-import GetLocation from 'react-native-get-location';
+import Geolocation from 'react-native-geolocation-service';
 
 class CameraScreen extends Component {
   constructor(props) {
@@ -20,7 +20,7 @@ class CameraScreen extends Component {
       this.requestCameraPermission();
       this.requestStorageWritePermissions();
       this.requestStorageReadPermissions();
-      this.requestCoarseLocation();
+      this.requestFineLocation();
     }
     console.log(props);
     this.viewShotRef = React.createRef();
@@ -32,6 +32,8 @@ class CameraScreen extends Component {
       sketchImageURI: '',
       backgroundImageURI: '',
       mergedImageURI: '',
+      latitude: 0.0,
+      longitude: 0.0
     }
   }
 
@@ -80,16 +82,16 @@ class CameraScreen extends Component {
     }
   }
   
-  async requestCoarseLocation(){
+  async requestFineLocation(){
     try {
       const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         {
           title: 'Diggraffiti',
-          message: 'Let Diggrafiti Access Coarse Location',
+          message: 'Let Diggrafiti Access Fine Location',
         },
       );
-      granted === PermissionsAndroid.RESULTS.GRANTED ? console.log('Coarse Location Accessible') : console.log('Coarse Location Not Accessible');
+      granted === PermissionsAndroid.RESULTS.GRANTED ? console.log('Fine Location Accessible') : console.log('Fine Location Not Accessible');
     } catch (err) {
       console.warn(err);
     }
@@ -106,7 +108,7 @@ class CameraScreen extends Component {
   async captureImages(succes, path){
     await this.captureBackground();
     await this.captureSketch(succes, path);
-    this.getUserLocation();
+    await this.getUserLocation();
     this.imageMerger();
   }
 
@@ -134,23 +136,24 @@ class CameraScreen extends Component {
     this.setState({backgroundImageURI: backgroundURI}), ()=>{console.log(this.state.backgroundImageURI)};
   }
 
-  getUserLocation(){
-    GetLocation.getCurrentPosition({
-      enableHighAccuracy: false,
-      timeout: 15000,
-    })
-    .then(location => {
-      console.log(location);
-    })
-    .catch(error => {
-      const { code, message } = error;
-      console.warn(code, message);
-    })
+  async getUserLocation(){
+    
+     Geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({latitude: position['coords']['latitude']}), ()=>{console.log(this.state.latitude)};
+        this.setState({longitude: position['coords']['longitude']}), ()=>{console.log(this.state.longitude)};
+      },
+      (error) => {
+        console.log(error.code, error.message);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+  );
+  
   }
 
   sendSketchToBackEnd(){
     let email = this.props.email;
-    let sketchLocation = [23.4556, 46.435] //dummy data ;
+    let sketchLocation = [this.state.latitude, this.state.longitude];
     let imageFileUri = this.state.mergedImageURI;
     let splittedFileUri = imageFileUri.split("/");
     let file = splittedFileUri[splittedFileUri.length-1];
