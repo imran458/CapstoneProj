@@ -11,6 +11,7 @@ import ViewShot from "react-native-view-shot";
 import RNImageTools from 'react-native-image-tools-wm';
 import { connect } from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
+import Geolocation from 'react-native-geolocation-service';
 
 class CameraScreen extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class CameraScreen extends Component {
       this.requestCameraPermission();
       this.requestStorageWritePermissions();
       this.requestStorageReadPermissions();
+      this.requestFineLocation();
     }
     console.log(props);
     this.viewShotRef = React.createRef();
@@ -30,6 +32,8 @@ class CameraScreen extends Component {
       sketchImageURI: '',
       backgroundImageURI: '',
       mergedImageURI: '',
+      latitude: 0.0,
+      longitude: 0.0
     }
   }
 
@@ -77,6 +81,21 @@ class CameraScreen extends Component {
       console.warn(err);
     }
   }
+  
+  async requestFineLocation(){
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+        {
+          title: 'Diggraffiti',
+          message: 'Let Diggrafiti Access Fine Location',
+        },
+      );
+      granted === PermissionsAndroid.RESULTS.GRANTED ? console.log('Fine Location Accessible') : console.log('Fine Location Not Accessible');
+    } catch (err) {
+      console.warn(err);
+    }
+  }
 
   jumpToMapScreen() {
     this.props.navigation.navigate('MapScreen');
@@ -89,6 +108,7 @@ class CameraScreen extends Component {
   async captureImages(succes, path){
     await this.captureBackground();
     await this.captureSketch(succes, path);
+    await this.getUserLocation();
     this.imageMerger();
   }
 
@@ -116,9 +136,24 @@ class CameraScreen extends Component {
     this.setState({backgroundImageURI: backgroundURI}), ()=>{console.log(this.state.backgroundImageURI)};
   }
 
+  async getUserLocation(){
+    
+     Geolocation.getCurrentPosition(
+      (position) => {
+        this.setState({latitude: position['coords']['latitude']}), ()=>{console.log(this.state.latitude)};
+        this.setState({longitude: position['coords']['longitude']}), ()=>{console.log(this.state.longitude)};
+      },
+      (error) => {
+        console.log(error.code, error.message);
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+  );
+  
+  }
+
   sendSketchToBackEnd(){
     let email = this.props.email;
-    let sketchLocation = [23.4556, 46.435] //dummy data ;
+    let sketchLocation = [this.state.latitude, this.state.longitude];
     let imageFileUri = this.state.mergedImageURI;
     let splittedFileUri = imageFileUri.split("/");
     let file = splittedFileUri[splittedFileUri.length-1];
