@@ -5,6 +5,7 @@ import MapView, { Marker } from 'react-native-maps';
 import SearchBar from 'react-native-search-bar';
 import _ from 'lodash';
 import env from 'react-native-config';
+import axios from 'axios';
 
 export default class MapScreen extends Component{
     constructor(props){
@@ -20,11 +21,31 @@ export default class MapScreen extends Component{
             search: "",
             predictions: [],
             marker: [],
-            bottomMargin: 1
+            bottomMargin: 1,
         }
         this.handleChangeTextDebounced = _.debounce(this.handleChangeText, 1000);
     }
 
+    componentDidMount(){
+      this.fetchImages();
+    }
+
+    fetchImages(){
+      let sketchLocation = [23.4556, 46.435]; //dummy data 
+
+      axios({
+        method: 'get',
+        url: 'http://localhost:1234/api/image/getImages',
+        params: {coordinates: JSON.stringify(sketchLocation)}
+      })
+      .then((response) => { 
+        console.log(response);
+      }, (error) => {
+        console.log(error)
+  
+      });
+    }
+    
     async requestLocationPermission() {
         try {
           const granted = await PermissionsAndroid.request(
@@ -109,6 +130,7 @@ export default class MapScreen extends Component{
               placeholder='Search'
             />
             {predictions}
+            {/*}
             <MapView 
               region={this.state.region}
               onRegionChange={this.onRegionChange}
@@ -122,6 +144,7 @@ export default class MapScreen extends Component{
             >
               <Marker coordinate={{ latitude: this.state.marker.latitude, longitude: this.state.marker.longitude }} />
             </MapView>
+            */}
            </SafeAreaView>
         );
     }
