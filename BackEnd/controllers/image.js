@@ -89,11 +89,11 @@ async function getImages(req, res, next){
                 const range = getRange(coordinates, distance)
                 images = await Image.findAll({
                     where: {
-                        lat: {
-                            [Op.between]: range.lat
+                        latitude: {
+                            [Op.between]: range.latitude
                         },
-                        long: {
-                            [Op.between]: range.long
+                        longitude: {
+                            [Op.between]: range.longitude
                         }
                     }
                 })
