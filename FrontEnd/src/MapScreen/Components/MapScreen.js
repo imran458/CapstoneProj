@@ -21,7 +21,7 @@ export default class MapScreen extends Component{
             search: "",
             predictions: [],
             marker: [],
-            bottomMargin: 1
+            bottomMargin: 1,
         }
         this.handleChangeTextDebounced = _.debounce(this.handleChangeText, 1000);
     }
@@ -31,12 +31,12 @@ export default class MapScreen extends Component{
     }
 
     fetchImages(){
-      let sketchLocation = [23.4556, 46.435];
+      let sketchLocation = [23.4556, 46.435]; //dummy data 
 
       axios({
-        method: 'post',
+        method: 'get',
         url: 'http://localhost:1234/api/image/getImages',
-        data: {coordinates: JSON.stringify(sketchLocation)}
+        params: {coordinates: JSON.stringify(sketchLocation)}
       })
       .then((response) => { 
         console.log(response);
