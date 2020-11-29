@@ -11,6 +11,7 @@ import ViewShot from "react-native-view-shot";
 import RNImageTools from 'react-native-image-tools-wm';
 import { connect } from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
+import GetLocation from 'react-native-get-location';
 
 class CameraScreen extends Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class CameraScreen extends Component {
       this.requestCameraPermission();
       this.requestStorageWritePermissions();
       this.requestStorageReadPermissions();
+      this.requestCoarseLocation();
     }
     console.log(props);
     this.viewShotRef = React.createRef();
@@ -77,6 +79,21 @@ class CameraScreen extends Component {
       console.warn(err);
     }
   }
+  
+  async requestCoarseLocation(){
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        {
+          title: 'Diggraffiti',
+          message: 'Let Diggrafiti Access Coarse Location',
+        },
+      );
+      granted === PermissionsAndroid.RESULTS.GRANTED ? console.log('Coarse Location Accessible') : console.log('Coarse Location Not Accessible');
+    } catch (err) {
+      console.warn(err);
+    }
+  }
 
   jumpToMapScreen() {
     this.props.navigation.navigate('MapScreen');
@@ -89,6 +106,7 @@ class CameraScreen extends Component {
   async captureImages(succes, path){
     await this.captureBackground();
     await this.captureSketch(succes, path);
+    this.getUserLocation();
     this.imageMerger();
   }
 
@@ -114,6 +132,20 @@ class CameraScreen extends Component {
   async captureBackground(){
     let backgroundURI = await this.viewShotRef.current.capture().then(uri => uri);
     this.setState({backgroundImageURI: backgroundURI}), ()=>{console.log(this.state.backgroundImageURI)};
+  }
+
+  getUserLocation(){
+    GetLocation.getCurrentPosition({
+      enableHighAccuracy: false,
+      timeout: 15000,
+    })
+    .then(location => {
+      console.log(location);
+    })
+    .catch(error => {
+      const { code, message } = error;
+      console.warn(code, message);
+    })
   }
 
   sendSketchToBackEnd(){
