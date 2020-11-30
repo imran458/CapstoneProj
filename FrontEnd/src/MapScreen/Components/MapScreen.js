@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity, SafeAreaView, Platform, PermissionsAndroid} from 'react-native';
+import {View, Text, TouchableOpacity, SafeAreaView, FlatList, Platform, PermissionsAndroid} from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
 import styles from '../Styles/MapScreenStyles.js';
 import MapView, { Marker } from 'react-native-maps';
 import SearchBar from 'react-native-search-bar';
@@ -14,20 +15,29 @@ export default class MapScreen extends Component{
             this.requestLocationPermission();
         }
         this.state = {
-            region:{ 
-                latitude: 37.78825,
-                longitude: -122.4324
-            },
-            search: "",
-            predictions: [],
-            marker: [],
-            bottomMargin: 1,
+          region: { 
+              latitude: 37.78825,
+              longitude: -122.4324,
+              latitudeDelta: 0.0922,
+              longitudeDelta: 0.0421,
+          },
+          search: "",
+          predictions: [],
+          markers: [],
         }
         this.handleChangeTextDebounced = _.debounce(this.handleChangeText, 1000);
     }
 
     componentDidMount(){
       this.fetchImages();
+      Geolocation.getCurrentPosition(info =>
+        this.setState( {region: { 
+          latitude: info.coords.latitude,
+          longitude: info.coords.longitude,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
+        }})
+      );
     }
 
     fetchImages(){
@@ -42,27 +52,24 @@ export default class MapScreen extends Component{
         console.log(response);
       }, (error) => {
         console.log(error)
-  
       });
     }
     
     async requestLocationPermission() {
-        try {
-          const granted = await PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-            {
-              title: "Diggraffiti",
-              message: "Allow Digraffiti to access your location"
-            }
-          );
-          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-            alert("Location access granted");
-          } else {
-            alert("Location access denied");
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          {
+            title: "Diggraffiti",
+            message: "Allow Digraffiti to access your location"
           }
-        } catch (err) {
-          console.warn(err);
+        );
+        if (!granted === PermissionsAndroid.RESULTS.GRANTED) {
+          alert("Location access denied");
         }
+      } catch (err) {
+        console.log(err);
+      }
     }
 
     onRegionChange = (region) => {
@@ -72,82 +79,121 @@ export default class MapScreen extends Component{
     };
 
     async handleChangeText(text){
-      // this.setState({ search: text }, () => {
-      //   console.log("TEXT CHANGED:", this.state.search);
-      // });
+      this.setState({ search: text }, () => {
+        console.log(this.state.search)
+      });
       const url = `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${env.API_KEY}&input=
       ${text}&location=${this.state.region.latitude}, ${this.state.region.longitude}&radius=2000`;
       try{
         const result = await fetch(url);
         const json =  await result.json();
+        console.log(json.predictions.length);
         this.setState( {predictions: json.predictions} );
       } catch(err){
         console.log(err);
       }
     }
 
-    //button to go back to current location???
-    //pinpoint location
     async handleSelectedAddress(prediction){
       const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${prediction['place_id']}&key=${env.API_KEY}`
       try{
         const result = await fetch(url);
         const json =  await result.json();
+        //console.log(json);
         this.setState( {region: { 
           latitude: json.result.geometry.location.lat,
           longitude: json.result.geometry.location.lng,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
         }});
-        this.setState( {marker: { 
+        const newState = this.state.markers.concat({ 
           latitude: json.result.geometry.location.lat,
-          longitude: json.result.geometry.location.lng
-        }}, () => {
-          console.log("MARKER", this.state.marker);
+          longitude: json.result.geometry.location.lng,
+          latitudeDelta:.1,
+          longitudeDelta: .1
+        });
+        this.setState({
+          markers: newState,
+          predictions: []
+        }, () => {
+          //console.log("MARKERS: ", this.state.markers, this.state.predictions);
         });
       } catch(err){
         console.log(err);
       }
     }
 
+    renderPrediction = ({ item }) => {
+      return (
+        <TouchableOpacity style={styles.prediction} onPress={() => this.handleSelectedAddress(item)}>
+          <Text style={styles.text}>
+            {item.description}
+          </Text>
+          <View style={styles.divider}/>
+        </TouchableOpacity>
+      );
+    };
+
     render() {
-        const predictions = this.state.predictions.map((prediction, index) => (
-          <TouchableOpacity key={index} style={styles.container} onPress={() => this.handleSelectedAddress(prediction)}>
-            <View>
-              <Text style={styles.text}>
-                {prediction.description}
-              </Text>
-            </View>
-          </TouchableOpacity>
-        ));
         return (
-           <SafeAreaView style={{flex: 1}}>
+          <SafeAreaView style={styles.container}>
             <SearchBar
               value={this.state.search}
               onChangeText={text=>
                 this.handleChangeTextDebounced(text)
               }
-              placeholder='Search'
+              textColor='black'  
             />
-            {predictions}
-            {/*}
-            <MapView 
-              region={this.state.region}
-              onRegionChange={this.onRegionChange}
-              style={{flex: 1, marginBottom: this.state.bottomMargin}}        
-              zoomEnabled={true}  
-              followsUserLocation={true}
-              showsMyLocationButton={true}     
-              showsUserLocation={true}
-              annotations={this.state.marker} 
-              onMapReady={() => this.setState({ bottomMargin: 0 })} 
-            >
-              <Marker coordinate={{ latitude: this.state.marker.latitude, longitude: this.state.marker.longitude }} />
-            </MapView>
-            */}
-           </SafeAreaView>
+            {(this.state.search === "" || this.state.predictions.length === 0) ?
+              <View style={styles.container}>
+                <FlatList 
+                  style={styles.flatList1}
+                  data={this.state.predictions}
+                  renderItem={this.renderPrediction}
+                />
+                <MapView 
+                  region={this.state.region}
+                  style={styles.map1}
+                  followsUserLocation={true}
+                  showsMyLocationButton={true}     
+                  showsUserLocation={true}
+                > 
+                  {this.state.markers.map((marker, index) => (
+                    <Marker
+                      key={index}
+                      coordinate={{
+                        latitude: marker.latitude,
+                        longitude: marker.longitude
+                      }}
+                    />
+                  ))}
+                </MapView>
+              </View>: 
+              <View style={styles.container}>
+                <FlatList 
+                  style={styles.flatList2}
+                  data={this.state.predictions}
+                  renderItem={this.renderPrediction}
+                />
+                <MapView 
+                    region={this.state.region}
+                    style={styles.map2}
+                    followsUserLocation={true}
+                    showsMyLocationButton={true}     
+                    showsUserLocation={true}
+                > 
+                  {this.state.markers.map((marker, index) => (
+                    <Marker
+                      key={index}
+                      coordinate={{
+                        latitude: marker.latitude,
+                        longitude: marker.longitude
+                      }}
+                    />
+                  ))}
+                </MapView>
+              </View>}
+          </SafeAreaView>
         );
     }
 }
-    
-    
