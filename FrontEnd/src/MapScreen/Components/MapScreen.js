@@ -24,6 +24,7 @@ export default class MapScreen extends Component{
           search: "",
           predictions: [],
           markers: [],
+          sketchesInfo: []
         }
         this.handleChangeTextDebounced = _.debounce(this.handleChangeText, 1000);
     }
@@ -41,15 +42,15 @@ export default class MapScreen extends Component{
     }
 
     fetchImages(){
-      let sketchLocation = [23.4556, 46.435]; //dummy data 
+      let sketchLocation = [40.8320147, -73.872721]; //dummy data will return one image from API. Should be swapped with user's current lat/log
 
       axios({
         method: 'get',
         url: 'http://localhost:1234/api/image/getImages',
         params: {coordinates: JSON.stringify(sketchLocation)}
       })
-      .then((response) => { 
-        console.log(response);
+      .then((response) => {
+        this.setState({sketchesInfo: response['data']}, ()=>{console.log(JSON.stringify(this.state.sketchesInfo))});
       }, (error) => {
         console.log(error)
       });
@@ -135,6 +136,7 @@ export default class MapScreen extends Component{
     };
 
     render() {
+      //console.log(this.state.sketchesInfo);
         return (
           <SafeAreaView style={styles.container}>
             <SearchBar
