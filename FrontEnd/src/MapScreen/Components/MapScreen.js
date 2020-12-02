@@ -136,7 +136,6 @@ export default class MapScreen extends Component{
     };
 
     render() {
-      //console.log(this.state.sketchesInfo);
         return (
           <SafeAreaView style={styles.container}>
             <SearchBar
