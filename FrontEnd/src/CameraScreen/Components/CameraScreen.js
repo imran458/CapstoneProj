@@ -17,10 +17,7 @@ class CameraScreen extends Component {
   constructor(props) {
     super();
     if (Platform.OS === 'android') {
-      this.requestCameraPermission();
-      this.requestStorageWritePermissions();
-      this.requestStorageReadPermissions();
-      this.requestFineLocation();
+      this.requestPhoneFeatures()
     }
     console.log(props);
     this.viewShotRef = React.createRef();
@@ -37,77 +34,40 @@ class CameraScreen extends Component {
     }
   }
 
-  async requestStorageReadPermissions() {
+  async requestPhoneFeatures() {
     try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
-        {
-          title: 'Diggraffiti',
-          message: 'Let Diggrafiti Read From External Storage',
-        },
-      );
-      granted === PermissionsAndroid.RESULTS.GRANTED ? console.log('You can read from external storage') : console.log('Cannot read from external storage');
-    } catch (err) {
-      console.warn(err);
-    }
-  }
-
-  async requestStorageWritePermissions() {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
-        {
-          title: 'Diggraffiti',
-          message: 'Let Diggrafiti Write to External Storage',
-        },
-      );
-      granted === PermissionsAndroid.RESULTS.GRANTED ? console.log('You can write to external storage') : console.log('Cannot write to external storage');
-    } catch (err) {
-      console.warn(err);
-    }
-  }
-
-  async requestCameraPermission() {
-    try {
-      const granted = await PermissionsAndroid.request(
+      const granted = await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.CAMERA,
-        {
-          title: 'Diggraffiti',
-          message: 'Let Diggrafiti Access the Camera',
-        },
-      );
-      granted === PermissionsAndroid.RESULTS.GRANTED ? console.log('You can use the camera') : console.log('Camera permission denied');
-    } catch (err) {
-      console.warn(err);
+        PermissionsAndroid.PERMISSIONS.READ_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      ]);
+      return granted;
     }
-  }
-  
-  async requestFineLocation(){
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-        {
-          title: 'Diggraffiti',
-          message: 'Let Diggrafiti Access Fine Location',
-        },
-      );
-      granted === PermissionsAndroid.RESULTS.GRANTED ? console.log('Fine Location Accessible') : console.log('Fine Location Not Accessible');
-    } catch (err) {
-      console.warn(err);
+    catch (err) {
+      Warning(err);
     }
+    return null;
   }
+      
 
   jumpToMapScreen() {
     this.props.navigation.navigate('MapScreen');
   }
 
-  paintBrushPressed(){
-    this.setState({paintBrushIconPressed: !this.state.paintBrushIconPressed});
+  closeSketchTools(){
+    this.setState({paintBrushIconPressed: false});
+    this.setState({modalVisible: false});
   }
 
-  async captureImages(succes, path){
+  openSketchTools(){
+    this.setState({paintBrushIconPressed: true});
+    this.setState({modalVisible: true});
+  }
+
+  async captureImages(success, path){
     await this.captureBackground();
-    await this.captureSketch(succes, path);
+    await this.captureSketch(success, path);
     await this.getUserLocation();
     this.imageMerger();
   }
@@ -133,6 +93,7 @@ class CameraScreen extends Component {
 
   async captureBackground(){
     let backgroundURI = await this.viewShotRef.current.capture().then(uri => uri);
+    console.log(" background uri: " + backgroundURI);
     this.setState({backgroundImageURI: backgroundURI}), ()=>{console.log(this.state.backgroundImageURI)};
   }
 
@@ -151,14 +112,15 @@ class CameraScreen extends Component {
   
   }
 
-  sendSketchToBackEnd(){
+  async sendSketchToBackEnd(){
     let email = this.props.email;
     let sketchLocation = [this.state.latitude, this.state.longitude];
     let imageFileUri = this.state.mergedImageURI;
     let splittedFileUri = imageFileUri.split("/");
     let file = splittedFileUri[splittedFileUri.length-1];
+    let originalFileName = file.split('.')[0];
+    file = file.replace(originalFileName, this.state.imageName);
 
-    
     RNFetchBlob.fetch('POST', 'http://localhost:1234/api/image/upload', {
       'Content-Type' : 'multipart/form-data',
     },[
@@ -182,6 +144,34 @@ class CameraScreen extends Component {
           type={RNCamera.Constants.Type.back}
           flashMode={RNCamera.Constants.FlashMode.auto}
           captureAudio={false}>
+
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.state.modalVisible}
+            onRequestClose={() => {Alert.alert("Modal has been closed.");}}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.nameSketchText}>Name Your Sketch</Text>
+                <TextInput
+                  placeholder="Enter a sketch name"
+                  autoFocus={true}
+                  placeholderTextColor='#000000'
+                  style={styles.imageNameInput}
+                  onChangeText={(imageName) => this.setState({imageName})}
+                />
+                <Entypo name="pencil" color={'#2d2d2d'} size={20} style={{position: 'absolute', top: '67%', left: '13%'}} />
+                <TouchableOpacity style={styles.cancelButton} onPress={() => {this.setState({modalVisible: false})}}>
+                  <Text style={styles.cancelText}>Cancel</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={styles.submitButton} onPress={() => this.setState({modalVisible: false})}>
+                  <Text style={styles.submitText}>Submit</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
         
           {this.state.paintBrushIconPressed ?
             <RNSketchCanvas
@@ -189,7 +179,7 @@ class CameraScreen extends Component {
               defaultStrokeWidth={5}
               containerStyle={styles.sketchContainer}
               canvasStyle={styles.sketchCanvas}
-              onClosePressed={() => this.paintBrushPressed()}
+              onClosePressed={() => this.closeSketchTools()}
               closeComponent={<View style={styles.close}><MaterialCommunityIcons name="window-close" size={40}/></View>}
               clearComponent={<View style={styles.trash}><Fontisto name="trash" size={35}/></View>}
               eraseComponent={<View style={styles.eraser}><MaterialCommunityIcons name="eraser" size={45} /></View>}
@@ -205,34 +195,9 @@ class CameraScreen extends Component {
               <TouchableOpacity style={styles.mapMarkerIcon}>
                 <Fontisto name="map-marker-alt" size={42} onPress={() => this.jumpToMapScreen()}/>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.paintBrush} onPress={() => this.paintBrushPressed()}>
+              <TouchableOpacity style={styles.paintBrush} onPress={() => this.openSketchTools()}>
                 <FontAwesome5 name="paint-brush" size={50}/>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.editIcon} onPress={() => { this.setState({modalVisible: true})}}>
-                <Entypo name="pencil" color={'#2d2d2d'} size={45} />
-              </TouchableOpacity>
-
-              <Modal
-                animationType="fade"
-                transparent={true}
-                visible={this.state.modalVisible}
-                onRequestClose={() => {Alert.alert("Modal has been closed.");}}
-              >
-                <View style={styles.centeredView}>
-                  <View style={styles.modalView}>
-                    <TextInput
-                      placeholder="Please enter a name for the sketch"
-                      autoFocus={true}
-                      placeholderTextColor='#000000'
-                      style={styles.imageNameInput}
-                      onChangeText={(imageName) => this.setState({imageName})}
-                    />
-                    <TouchableOpacity style={{ ...styles.cancelButton, backgroundColor: "grey" }} onPress={() => {this.setState({modalVisible: false})}}>
-                      <Text style={styles.cancelText}>Cancel</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </Modal>
             </View>
             }
         </RNCamera>
