@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, PermissionsAndroid, Keyboard, TouchableWithoutFeedback, Platform, Modal, Text, TextInput} from 'react-native';
+import {View, TouchableOpacity, PermissionsAndroid, Platform, Modal, Text, TextInput} from 'react-native';
 import styles from '../Styles/CameraScreenStyles.js';
 import {RNCamera} from 'react-native-camera';
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
@@ -93,7 +93,6 @@ class CameraScreen extends Component {
 
   async captureBackground(){
     let backgroundURI = await this.viewShotRef.current.capture().then(uri => uri);
-    console.log(" background uri: " + backgroundURI);
     this.setState({backgroundImageURI: backgroundURI}), ()=>{console.log(this.state.backgroundImageURI)};
   }
 
@@ -142,36 +141,33 @@ class CameraScreen extends Component {
           type={RNCamera.Constants.Type.back}
           flashMode={RNCamera.Constants.FlashMode.auto}
           captureAudio={false}>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.state.modalVisible}
+            onRequestClose={() => {Alert.alert("Modal has been closed.");}}
+          >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+                <Text style={styles.nameSketchText}>Name Your Sketch</Text>
+                <TextInput
+                  placeholder="Enter a sketch name"
+                  autoFocus={true}
+                  placeholderTextColor='#000000'
+                  style={styles.imageNameInput}
+                  onChangeText={(imageName) => this.setState({imageName})}
+                />
+                <Entypo name="pencil" color={'#2d2d2d'} size={20} style={styles.editIcon} />
+                <TouchableOpacity style={styles.cancelButton} onPress={() => {this.setState({modalVisible: false})}}>
+                  <Text style={styles.cancelText}>Cancel</Text>
+                </TouchableOpacity>
 
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <Modal
-              animationType="fade"
-              transparent={true}
-              visible={this.state.modalVisible}
-              onRequestClose={() => {Alert.alert("Modal has been closed.");}}
-            >
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                  <Text style={styles.nameSketchText}>Name Your Sketch</Text>
-                  <TextInput
-                    placeholder="Enter a sketch name"
-                    autoFocus={true}
-                    placeholderTextColor='#000000'
-                    style={styles.imageNameInput}
-                    onChangeText={(imageName) => this.setState({imageName})}
-                  />
-                  <Entypo name="pencil" color={'#2d2d2d'} size={20} style={styles.editIcon} />
-                  <TouchableOpacity style={styles.cancelButton} onPress={() => {this.setState({modalVisible: false})}}>
-                    <Text style={styles.cancelText}>Cancel</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity style={styles.submitButton} onPress={() => this.setState({modalVisible: false})}>
-                    <Text style={styles.submitText}>Submit</Text>
-                  </TouchableOpacity>
-                </View>
+                <TouchableOpacity style={styles.submitButton} onPress={() => this.setState({modalVisible: false})}>
+                  <Text style={styles.submitText}>Submit</Text>
+                </TouchableOpacity>
               </View>
-            </Modal>
-          </TouchableWithoutFeedback>
+            </View>
+          </Modal>
         
           {this.state.paintBrushIconPressed ?
             <RNSketchCanvas
