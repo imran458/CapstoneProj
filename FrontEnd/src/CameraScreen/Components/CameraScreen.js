@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, PermissionsAndroid, Platform, Modal, Text, TextInput} from 'react-native';
+import {View, TouchableOpacity, PermissionsAndroid, Keyboard, TouchableWithoutFeedback, Platform, Modal, Text, TextInput} from 'react-native';
 import styles from '../Styles/CameraScreenStyles.js';
 import {RNCamera} from 'react-native-camera';
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
@@ -98,18 +98,16 @@ class CameraScreen extends Component {
   }
 
   async getUserLocation(){
-    
-     Geolocation.getCurrentPosition(
-      (position) => {
-        this.setState({latitude: position['coords']['latitude']}), ()=>{console.log(this.state.latitude)};
-        this.setState({longitude: position['coords']['longitude']}), ()=>{console.log(this.state.longitude)};
-      },
-      (error) => {
-        console.log(error.code, error.message);
-      },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
-  );
-  
+    Geolocation.getCurrentPosition(
+    (position) => {
+      this.setState({latitude: position['coords']['latitude']}), ()=>{console.log(this.state.latitude)};
+      this.setState({longitude: position['coords']['longitude']}), ()=>{console.log(this.state.longitude)};
+    },
+    (error) => {
+      console.log(error.code, error.message);
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+    );
   }
 
   async sendSketchToBackEnd(){
@@ -145,33 +143,35 @@ class CameraScreen extends Component {
           flashMode={RNCamera.Constants.FlashMode.auto}
           captureAudio={false}>
 
-          <Modal
-            animationType="fade"
-            transparent={true}
-            visible={this.state.modalVisible}
-            onRequestClose={() => {Alert.alert("Modal has been closed.");}}
-          >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text style={styles.nameSketchText}>Name Your Sketch</Text>
-                <TextInput
-                  placeholder="Enter a sketch name"
-                  autoFocus={true}
-                  placeholderTextColor='#000000'
-                  style={styles.imageNameInput}
-                  onChangeText={(imageName) => this.setState({imageName})}
-                />
-                <Entypo name="pencil" color={'#2d2d2d'} size={20} style={{position: 'absolute', top: '67%', left: '13%'}} />
-                <TouchableOpacity style={styles.cancelButton} onPress={() => {this.setState({modalVisible: false})}}>
-                  <Text style={styles.cancelText}>Cancel</Text>
-                </TouchableOpacity>
+          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <Modal
+              animationType="fade"
+              transparent={true}
+              visible={this.state.modalVisible}
+              onRequestClose={() => {Alert.alert("Modal has been closed.");}}
+            >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <Text style={styles.nameSketchText}>Name Your Sketch</Text>
+                  <TextInput
+                    placeholder="Enter a sketch name"
+                    autoFocus={true}
+                    placeholderTextColor='#000000'
+                    style={styles.imageNameInput}
+                    onChangeText={(imageName) => this.setState({imageName})}
+                  />
+                  <Entypo name="pencil" color={'#2d2d2d'} size={20} style={styles.editIcon} />
+                  <TouchableOpacity style={styles.cancelButton} onPress={() => {this.setState({modalVisible: false})}}>
+                    <Text style={styles.cancelText}>Cancel</Text>
+                  </TouchableOpacity>
 
-                <TouchableOpacity style={styles.submitButton} onPress={() => this.setState({modalVisible: false})}>
-                  <Text style={styles.submitText}>Submit</Text>
-                </TouchableOpacity>
+                  <TouchableOpacity style={styles.submitButton} onPress={() => this.setState({modalVisible: false})}>
+                    <Text style={styles.submitText}>Submit</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-            </View>
-          </Modal>
+            </Modal>
+          </TouchableWithoutFeedback>
         
           {this.state.paintBrushIconPressed ?
             <RNSketchCanvas

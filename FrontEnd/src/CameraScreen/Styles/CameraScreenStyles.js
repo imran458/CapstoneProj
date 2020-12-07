@@ -189,8 +189,8 @@ export default StyleSheet.create({
 
   editIcon: {
     position: 'absolute', 
-    top: 15,
-    left: '6%'
+    top: '67%', 
+    left: '13%'
   },
 
   image: {
