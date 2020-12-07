@@ -106,12 +106,20 @@ export default StyleSheet.create({
 
   imageNameInput: {
     height: 40,
-    width: 250,
-    backgroundColor: '#FFFFFF',
-    paddingLeft: 10,
+    width: 200,
+    backgroundColor: 'white',
+    paddingLeft: 32,
     marginBottom: 20,
-    top: '35%',
+    borderRadius: 20,
+    top: '60%',
     position: 'absolute'
+  },
+
+  nameSketchText: {
+    position: 'absolute',
+    alignSelf: 'center', 
+    top: '0%', 
+    fontWeight: 'bold'
   },
 
   centeredView: {
@@ -125,7 +133,7 @@ export default StyleSheet.create({
   modalView: {
     margin: 20,
     width: '70%',
-    top: '25%',
+    top: '13%',
     height: '35%',
     backgroundColor: "#e5e5e5",
     padding: 35,
@@ -142,28 +150,47 @@ export default StyleSheet.create({
   },
   
   cancelText: {
-    color: "white",
+    color: "red",
     fontWeight: "bold",
     textAlign: "center",
     position: 'absolute',
     top: '26%',
     left: '34%',
-    fontFamily: 'sans-serif-thin'
+    fontWeight: 'bold'
   },
 
   cancelButton: {
-    backgroundColor: "#F194FF",
-    top: '119%',
-    left: '0%',
-    height: '20%',
-    width: '70%',
-    position: 'absolute'
+    backgroundColor: "transparent",
+    top: '99%',
+    right: '35.5%',
+    height: '30%',
+    width: '75%',
+    position: 'relative'
+  },
+
+  submitButton: {
+    backgroundColor: "transparent",
+    top: '69%',
+    left: '33%',
+    height: '30%',
+    width: '71.5%',
+    position: 'relative'
+  },
+
+  submitText: {
+    color: "green",
+    fontWeight: "bold",
+    textAlign: "center",
+    position: 'absolute',
+    top: '26%',
+    left: '34%',
+    fontWeight: 'bold'
   },
 
   editIcon: {
     position: 'absolute', 
-    top: 15,
-    left: '6%'
+    top: '67%', 
+    left: '13%'
   },
 
   image: {
