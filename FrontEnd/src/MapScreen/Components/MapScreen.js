@@ -93,19 +93,19 @@ export default class MapScreen extends Component{
     }
 
     renderImageForPressedMarker(imageUrl, imageName){
-      this.setState({visible: true});
+      this.setState({visible: true}, ()=>{console.log(this.state.visible)});
       return(
         <Modal
-            animationType="fade"
-            transparent={true}
-            visible={this.state.modalVisible}
-            onRequestClose={() => {Alert.alert("Modal has been closed.");}}
+          animationType="fade"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => {Alert.alert("Modal has been closed.");}}
           >
-            <View style={styles.centeredView}>
-              <View style={styles.modalView}>
-                <Text>{imageName}</Text>
-              </View>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text>{imageName}</Text>
             </View>
+          </View>
         </Modal>
       )
     }
