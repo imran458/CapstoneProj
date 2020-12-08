@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Alert} from 'react-native';
 import styles from '../Styles/LoginScreenStyles.js';
 import { LoginManager, AccessToken} from 'react-native-fbsdk'
 import { GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
@@ -98,11 +98,22 @@ class LoginScreen extends Component{
             console.log(response);
             this.jumpToCameraScreen();
           }, (error) => {
-            console.log(error)
-      
+            console.log(error);
+            this.renderAuthenticationAlert();
           });
 
     }
+
+    renderAuthenticationAlert(){
+        Alert.alert(
+          "Alert",
+          "Unsuccessful Login. Try Again!",
+          [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ],
+          { cancelable: false }
+        );
+      }
 
     render() {
         return (

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, PermissionsAndroid, Platform, Modal, Text, TextInput} from 'react-native';
+import {View, TouchableOpacity, PermissionsAndroid, Platform, Alert, Modal, Text, TextInput} from 'react-native';
 import styles from '../Styles/CameraScreenStyles.js';
 import {RNCamera} from 'react-native-camera';
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
@@ -72,6 +72,17 @@ class CameraScreen extends Component {
     this.imageMerger();
   }
 
+  renderSaveAlert(){
+    Alert.alert(
+      "Alert",
+      "Sketch Saved Successfully!",
+      [
+        { text: "OK", onPress: () => console.log("OK Pressed") }
+      ],
+      { cancelable: false }
+    );
+  }
+
   imageMerger(){
     RNImageTools.merge([this.state.backgroundImageURI,this.state.sketchImageURI]).then(({ uri, width, height }) => {
       this.setState({mergedImageURI: uri}),()=>{console.log(this.state.mergedImageURI)};
@@ -127,6 +138,7 @@ class CameraScreen extends Component {
     ]
   ).then((response) => {
     console.log(response);
+    this.renderSaveAlert();
   }).catch((error) => {
     console.log(error);
   })
