@@ -8,7 +8,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {connect} from 'react-redux';
 import {addFirstName, addLastName, addEmail} from '../../actions/loginInfo.js';
 import axios from 'axios';
-import {API_URL, GOOGLE_SIGN_IN_CLIENT_ID} from "@env"
+import {GOOGLE_SIGN_IN_CLIENT_ID} from "@env"
 
 class LoginScreen extends Component{
     constructor(props){
@@ -87,9 +87,10 @@ class LoginScreen extends Component{
     }
 
     sendUserInfoToBackend(firstName, lastName, email){
+        console.log(firstName, lastName, email);
         axios({
             method: 'post',
-            url: "localhost:1234/api/auth",
+            url: "http://localhost:1234/api/auth",
             data: {first: firstName, last: lastName, email: email}
           })
           .then((response) => { 
