@@ -118,6 +118,7 @@ class LoginScreen extends Component{
     render() {
         return (
             <View style={styles.container}>
+                <Text style={styles.login}>Login</Text>
                 <TouchableOpacity style={styles.facebookSignInButton} onPress={() => this.handleFacebookLogin()}>
                     <Entypo name="facebook" size={30} style={styles.facebookIcon}/>
                     <Text style={styles.signInWithFacebookText}>Sign in with Facebook </Text>          
