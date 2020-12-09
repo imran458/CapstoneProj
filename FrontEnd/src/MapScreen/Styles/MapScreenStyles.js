@@ -65,7 +65,7 @@ export default StyleSheet.create({
         marginTop: 0
       },
     
-      modalView: {
+    modalView: {
         margin: 20,
         width: '70%',
         top: '13%',
@@ -75,12 +75,19 @@ export default StyleSheet.create({
         alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
-          width: 0,
-          height: 2
+            width: 0,
+            height: 2
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         elevation: 5,
         position: 'absolute'
-      },
+    },
+
+    cameraIcon: {
+        position: 'absolute', 
+        top: '90%', 
+        left: '3%'
+    }
+
 });

@@ -4,6 +4,7 @@ import Geolocation from '@react-native-community/geolocation';
 import styles from '../Styles/MapScreenStyles.js';
 import MapView, { Marker } from 'react-native-maps';
 import SearchBar from 'react-native-search-bar';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import _, { range } from 'lodash';
 import {API_KEY} from "@env";
 import axios from 'axios';
@@ -184,6 +185,10 @@ export default class MapScreen extends Component{
       );
     };
 
+    jumpToCameraScreen(){
+      this.props.navigation.navigate('CameraScreen');
+    }
+
     render() {
       return (
         <SafeAreaView style={styles.container}>
@@ -194,6 +199,7 @@ export default class MapScreen extends Component{
             }
             textColor='black'  
           />
+
           {(this.state.search === "" || this.state.predictions.length === 0) ?
             <View style={styles.container}>
               <FlatList 
@@ -219,6 +225,9 @@ export default class MapScreen extends Component{
                   />
                 ))}
               </MapView>
+              <TouchableOpacity onPress={() => this.jumpToCameraScreen()} style={styles.cameraIcon}>
+                <AntDesign name="camera" size={38} />       
+              </TouchableOpacity>
             </View>: 
             <View style={styles.container}>
               <FlatList 
