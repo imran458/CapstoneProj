@@ -43,6 +43,12 @@ export default StyleSheet.create({
 
     sketchText: {
         color: 'white'
+    },
+    
+    login: {
+        paddingBottom: 30,
+        fontWeight: 'bold',
+        fontSize: 30
     }
 
 });
