@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, PermissionsAndroid, Platform, Modal, Text, TextInput} from 'react-native';
+import {View, TouchableOpacity, PermissionsAndroid, Platform, Alert, Modal, Text, TextInput} from 'react-native';
 import styles from '../Styles/CameraScreenStyles.js';
 import {RNCamera} from 'react-native-camera';
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
@@ -69,11 +69,22 @@ class CameraScreen extends Component {
     await this.captureBackground();
     await this.captureSketch(success, path);
     await this.getUserLocation();
-    this.imageMerger();
+    await this.imageMerger();
   }
 
-  imageMerger(){
-    RNImageTools.merge([this.state.backgroundImageURI,this.state.sketchImageURI]).then(({ uri, width, height }) => {
+  renderSaveAlert(){
+    Alert.alert(
+      "Alert",
+      "Sketch Saved Successfully!",
+      [
+        { text: "OK", onPress: () => console.log("OK Pressed") }
+      ],
+      { cancelable: false }
+    );
+  }
+
+  async imageMerger(){
+    await RNImageTools.merge([this.state.backgroundImageURI,this.state.sketchImageURI]).then(({ uri, width, height }) => {
       this.setState({mergedImageURI: uri}),()=>{console.log(this.state.mergedImageURI)};
       this.sendSketchToBackEnd();
   }).catch(console.error);
@@ -97,7 +108,7 @@ class CameraScreen extends Component {
   }
 
   async getUserLocation(){
-    Geolocation.getCurrentPosition(
+    await Geolocation.getCurrentPosition(
     (position) => {
       this.setState({latitude: position['coords']['latitude']}), ()=>{console.log(this.state.latitude)};
       this.setState({longitude: position['coords']['longitude']}), ()=>{console.log(this.state.longitude)};
@@ -112,6 +123,7 @@ class CameraScreen extends Component {
   async sendSketchToBackEnd(){
     let email = this.props.email;
     let sketchLocation = [this.state.latitude, this.state.longitude];
+    console.log("this is sketch location: " + sketchLocation);
     let imageFileUri = this.state.mergedImageURI;
     let splittedFileUri = imageFileUri.split("/");
     let file = splittedFileUri[splittedFileUri.length-1];
@@ -127,6 +139,7 @@ class CameraScreen extends Component {
     ]
   ).then((response) => {
     console.log(response);
+    this.renderSaveAlert();
   }).catch((error) => {
     console.log(error);
   })

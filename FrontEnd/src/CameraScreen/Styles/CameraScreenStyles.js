@@ -200,7 +200,6 @@ export default StyleSheet.create({
     width: 300,
     height: 300,
     backgroundColor: 'white'
-    
-  }
+  },
 
 });

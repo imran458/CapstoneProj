@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import {View, Text, TouchableOpacity, Alert} from 'react-native';
 import styles from '../Styles/LoginScreenStyles.js';
 import { LoginManager, AccessToken} from 'react-native-fbsdk'
 import { GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
@@ -8,7 +8,7 @@ import AntDesign from 'react-native-vector-icons/AntDesign';
 import {connect} from 'react-redux';
 import {addFirstName, addLastName, addEmail} from '../../actions/loginInfo.js';
 import axios from 'axios';
-import {API_URL, GOOGLE_SIGN_IN_CLIENT_ID} from "@env"
+import {GOOGLE_SIGN_IN_CLIENT_ID} from "@env"
 
 class LoginScreen extends Component{
     constructor(props){
@@ -87,9 +87,10 @@ class LoginScreen extends Component{
     }
 
     sendUserInfoToBackend(firstName, lastName, email){
+        console.log(firstName, lastName, email);
         axios({
             method: 'post',
-            url: "localhost:1234/api/auth",
+            url: "http://localhost:1234/api/auth",
             data: {first: firstName, last: lastName, email: email}
           })
           .then((response) => { 
@@ -97,11 +98,22 @@ class LoginScreen extends Component{
             console.log(response);
             this.jumpToCameraScreen();
           }, (error) => {
-            console.log(error)
-      
+            console.log(error);
+            this.renderAuthenticationAlert();
           });
 
     }
+
+    renderAuthenticationAlert(){
+        Alert.alert(
+          "Alert",
+          "Unsuccessful Login. Try Again!",
+          [
+            { text: "OK", onPress: () => console.log("OK Pressed") }
+          ],
+          { cancelable: false }
+        );
+      }
 
     render() {
         return (
