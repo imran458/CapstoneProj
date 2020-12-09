@@ -69,7 +69,7 @@ class CameraScreen extends Component {
     await this.captureBackground();
     await this.captureSketch(success, path);
     await this.getUserLocation();
-    this.imageMerger();
+    await this.imageMerger();
   }
 
   renderSaveAlert(){
@@ -83,8 +83,8 @@ class CameraScreen extends Component {
     );
   }
 
-  imageMerger(){
-    RNImageTools.merge([this.state.backgroundImageURI,this.state.sketchImageURI]).then(({ uri, width, height }) => {
+  async imageMerger(){
+    await RNImageTools.merge([this.state.backgroundImageURI,this.state.sketchImageURI]).then(({ uri, width, height }) => {
       this.setState({mergedImageURI: uri}),()=>{console.log(this.state.mergedImageURI)};
       this.sendSketchToBackEnd();
   }).catch(console.error);
@@ -108,7 +108,7 @@ class CameraScreen extends Component {
   }
 
   async getUserLocation(){
-    Geolocation.getCurrentPosition(
+    await Geolocation.getCurrentPosition(
     (position) => {
       this.setState({latitude: position['coords']['latitude']}), ()=>{console.log(this.state.latitude)};
       this.setState({longitude: position['coords']['longitude']}), ()=>{console.log(this.state.longitude)};
@@ -123,6 +123,7 @@ class CameraScreen extends Component {
   async sendSketchToBackEnd(){
     let email = this.props.email;
     let sketchLocation = [this.state.latitude, this.state.longitude];
+    console.log("this is sketch location: " + sketchLocation);
     let imageFileUri = this.state.mergedImageURI;
     let splittedFileUri = imageFileUri.split("/");
     let file = splittedFileUri[splittedFileUri.length-1];

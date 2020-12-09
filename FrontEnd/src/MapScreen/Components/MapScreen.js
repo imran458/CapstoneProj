@@ -38,20 +38,24 @@ export default class MapScreen extends Component{
     }
 
     async componentDidMount(){
-      await this.fetchImages();
+      await this.getUserLocation();
+    }
+
+    async getUserLocation(){
       await Geolocation.getCurrentPosition(info =>
         this.setState( {region: { 
           latitude: info.coords.latitude,
           longitude: info.coords.longitude,
           latitudeDelta: 0.0922,
           longitudeDelta: 0.0421,
-        }})
+        }}, ()=> {this.fetchImages()})
       );
-      await this.imageLocationParser();
     }
 
     async fetchImages(){
-      let sketchLocation = [40.8320147, -73.872721];
+      
+      let sketchLocation = [this.state.region['latitude'], this.state.region['longitude']];
+      console.log("this is sketch location: " + sketchLocation);
 
       await axios({
         method: 'get',
@@ -59,14 +63,15 @@ export default class MapScreen extends Component{
         params: {coordinates: JSON.stringify(sketchLocation)}
       })
       .then((response) => {
-        this.setState({sketchesInfo: response['data']}, ()=>{console.log(JSON.stringify(this.state.sketchesInfo))});
-
+        console.log(JSON.stringify(response));
+        this.setState({sketchesInfo: response['data']}, ()=>{console.log("data: " + JSON.stringify(this.state.sketchesInfo))});
+        this.imageLocationParser();
       }, (error) => {
         console.log(error)
       });
     }
 
-    async imageLocationParser(){
+    imageLocationParser(){
       let coordinates = {};
       let imageInfo = this.state.sketchesInfo;
       let markers = this.state.markers;
