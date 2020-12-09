@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Image, Modal, TouchableOpacity, SafeAreaView, FlatList, Platform, PermissionsAndroid} from 'react-native';
+import {View, Text, Image, Modal, TouchableOpacity, SafeAreaView, FlatList, Platform, Alert, PermissionsAndroid} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import styles from '../Styles/MapScreenStyles.js';
 import MapView, { Marker } from 'react-native-maps';
@@ -23,10 +23,15 @@ export default class MapScreen extends Component{
               longitudeDelta: 0.0421,
           },
           search: "",
+          pressedMarkerImageUrl: "",
+          pressedMarkerImageName: "",
           predictions: [],
           markers: [],
           sketchesInfo: [],
-          visible: false
+          modalVisible: false,
+          currentImagePressed: false,
+
+
         }
         this.handleChangeTextDebounced = _.debounce(this.handleChangeText, 1000);
     }
@@ -90,27 +95,11 @@ export default class MapScreen extends Component{
       }
       console.log("url: " + imageUrlForPressedMarker);
       console.log("name:" + imageNameForPressedMarker);
-      this.renderImageForPressedMarker(imageUrlForPressedMarker, imageNameForPressedMarker);
+      this.setState({pressedMarkerImageUrl: imageUrlForPressedMarker}, ()=>{console.log(this.state.pressedMarkerImageUrl)});
+      this.setState({pressedMarkerImageName: imageNameForPressedMarker}, ()=>{console.log(this.state.pressedMarkerImageName)});
+      this.setState({modalVisible: !this.state.modalVisible}, ()=>{console.log(this.state.modalVisible)});
     }
 
-    renderImageForPressedMarker(imageUrl, imageName){
-      this.setState({visible: true}, ()=>{console.log(this.state.visible)});
-      return(
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {Alert.alert("Modal has been closed.");}}
-          >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text>{imageName}</Text>
-            </View>
-          </View>
-        </Modal>
-      )
-    }
-    
     async requestLocationPermission() {
       try {
         const granted = await PermissionsAndroid.request(
@@ -225,9 +214,24 @@ export default class MapScreen extends Component{
                   />
                 ))}
               </MapView>
+              <Modal
+                animationType="fade"
+                transparent={true}
+                visible={this.state.modalVisible}
+                onRequestClose={() => {Alert.alert("Modal has been closed.");}}
+                >
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                    <Text>{this.state.pressedMarkerImageName}</Text>
+                    <Image style={{width: '100%', height: '100%', position: 'absolute', top: '50%'}} source={{uri: this.state.pressedMarkerImageUrl}}/>
+                  </View>
+                </View>
+              </Modal>
+
               <TouchableOpacity onPress={() => this.jumpToCameraScreen()} style={styles.cameraIcon}>
                 <AntDesign name="camera" size={38} />       
               </TouchableOpacity>
+
             </View>: 
             <View style={styles.container}>
               <FlatList 
