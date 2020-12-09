@@ -67,9 +67,9 @@ export default StyleSheet.create({
     
     modalView: {
         margin: 20,
-        width: '70%',
-        top: '13%',
-        height: '35%',
+        width: '80%',
+        top: '18%',
+        height: '45%',
         backgroundColor: "#e5e5e5",
         padding: 35,
         alignItems: "center",
@@ -87,6 +87,26 @@ export default StyleSheet.create({
     cameraIcon: {
         position: 'absolute', 
         top: '90%', 
+        left: '3%'
+    },
+
+    renderedSketch: {
+        width: '100%', 
+        height: '100%', 
+        position: 'absolute',
+        top: '30%'
+    },
+
+    renderedSketchName: {
+        position: 'absolute',
+        top: '3%',
+        alignSelf: 'center',
+        fontWeight: 'bold'
+    },
+
+    closeModalIcon: {
+        position: 'absolute',
+        top: '3%',
         left: '3%'
     }
 

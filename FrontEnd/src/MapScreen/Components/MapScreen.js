@@ -25,6 +25,7 @@ export default class MapScreen extends Component{
           search: "",
           pressedMarkerImageUrl: "",
           pressedMarkerImageName: "",
+          pressedMarkerUserName: "",
           predictions: [],
           markers: [],
           sketchesInfo: [],
@@ -50,7 +51,7 @@ export default class MapScreen extends Component{
     }
 
     async fetchImages(){
-      let sketchLocation = [40.8320147, -73.872721]; //dummy data will return one image from API. Should be swapped with user's current lat/log
+      let sketchLocation = [40.8320147, -73.872721];
 
       await axios({
         method: 'get',
@@ -86,17 +87,19 @@ export default class MapScreen extends Component{
       let sketchInfos = this.state.sketchesInfo;
       let imageUrlForPressedMarker = '';
       let imageNameForPressedMarker = '';
+      let user = '';
 
       for(let i = 0; i < sketchInfos.length; i++){
         if (latitude == sketchInfos[i]['latitude'] && longitude == sketchInfos[i]['longitude']){
           imageUrlForPressedMarker = sketchInfos[i]['url'];
-          imageNameForPressedMarker = sketchInfos[i]['name'];
+          imageNameForPressedMarker = sketchInfos[i]['name'].split(".")[0];
+          user = sketchInfos[i]['user'].split("@")[0];
         }
       }
-      console.log("url: " + imageUrlForPressedMarker);
-      console.log("name:" + imageNameForPressedMarker);
+
       this.setState({pressedMarkerImageUrl: imageUrlForPressedMarker}, ()=>{console.log(this.state.pressedMarkerImageUrl)});
       this.setState({pressedMarkerImageName: imageNameForPressedMarker}, ()=>{console.log(this.state.pressedMarkerImageName)});
+      this.setState({pressedMarkerUserName: user}, ()=>{console.log(this.state.pressedMarkerUserName)});
       this.setState({modalVisible: !this.state.modalVisible}, ()=>{console.log(this.state.modalVisible)});
     }
 
@@ -222,8 +225,11 @@ export default class MapScreen extends Component{
                 >
                 <View style={styles.centeredView}>
                   <View style={styles.modalView}>
-                    <Text>{this.state.pressedMarkerImageName}</Text>
-                    <Image style={{width: '100%', height: '100%', position: 'absolute', top: '50%'}} source={{uri: this.state.pressedMarkerImageUrl}}/>
+                  <TouchableOpacity onPress={() => {this.setState({modalVisible: false})}} style={styles.closeModalIcon}>
+                    <AntDesign name="closecircle" size={20} color="red"/>       
+                  </TouchableOpacity>
+                  <Text style={styles.renderedSketchName}>{this.state.pressedMarkerUserName}'s {this.state.pressedMarkerImageName}</Text>
+                  <Image style={styles.renderedSketch} source={{uri: this.state.pressedMarkerImageUrl}}/>
                   </View>
                 </View>
               </Modal>
@@ -232,7 +238,7 @@ export default class MapScreen extends Component{
                 <AntDesign name="camera" size={38} />       
               </TouchableOpacity>
 
-            </View>: 
+            </View> : 
             <View style={styles.container}>
               <FlatList 
                 style={styles.flatList2}
