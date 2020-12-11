@@ -4,7 +4,6 @@ import styles from '../Styles/LoginScreenStyles.js';
 import { LoginManager, AccessToken} from 'react-native-fbsdk'
 import { GoogleSignin, GoogleSigninButton} from 'react-native-google-signin';
 import Entypo from 'react-native-vector-icons/Entypo';
-import AntDesign from 'react-native-vector-icons/AntDesign';
 import {connect} from 'react-redux';
 import {addFirstName, addLastName, addEmail} from '../../actions/loginInfo.js';
 import axios from 'axios';
@@ -130,10 +129,6 @@ class LoginScreen extends Component{
                     onPress={()=>this.handleGoogleLogin()}
                     disabled={false} 
                 />
-                <TouchableOpacity onPress={() => this.jumpToCameraScreen()} >
-                    <AntDesign name="camera" size={30} />       
-                </TouchableOpacity>
-
             </View>
         );
     }

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, PermissionsAndroid, Platform, Alert, Modal, Text, TextInput} from 'react-native';
+import {View, TouchableOpacity, PermissionsAndroid, Platform, Alert, Modal, Text, TextInput, KeyboardAvoidingView} from 'react-native';
 import styles from '../Styles/CameraScreenStyles.js';
 import {RNCamera} from 'react-native-camera';
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
@@ -165,7 +165,7 @@ class CameraScreen extends Component {
                 <Text style={styles.nameSketchText}>Name Your Sketch</Text>
                 <TextInput
                   placeholder="Enter a sketch name"
-                  autoFocus={true}
+                  autoFocus={false}
                   placeholderTextColor='#000000'
                   style={styles.imageNameInput}
                   onChangeText={(imageName) => this.setState({imageName})}

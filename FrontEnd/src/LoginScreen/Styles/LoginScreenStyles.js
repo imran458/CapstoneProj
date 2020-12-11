@@ -10,13 +10,15 @@ export default StyleSheet.create({
 
     googleSignInButton: {
         width: '62%', 
-        height: '7%'
+        height: '7%',
+        top: '-9%'
     },
 
     facebookSignInButton: {
         width: '60%', 
         height: '6%',
-        backgroundColor: '#151515'
+        backgroundColor: '#151515',
+        top: '-10%'
     },
 
     signInWithFacebookText: {
@@ -48,7 +50,8 @@ export default StyleSheet.create({
     login: {
         paddingBottom: 30,
         fontWeight: 'bold',
-        fontSize: 30
+        fontSize: 30,
+        top: '-20%'
     }
 
 });
