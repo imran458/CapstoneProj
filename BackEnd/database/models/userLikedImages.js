@@ -7,13 +7,11 @@ const UserLikedImages = db.define("User Liked Images", {
 		allowNull: false
 	},
 	image: {
-		type: Sequelize.INTEGER,
-		references: {
-			model: 'images',
-			key: 'id'
-		}
+		type: Sequelize.STRING,
+		allowNull: false
 	},
 	
 });
+
 
 module.exports = UserLikedImages;

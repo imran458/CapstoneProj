@@ -1,5 +1,5 @@
 const { Image, UserLikedImages, User } = require("../database/models");
-const { Op } = require("sequelize");
+const { Op, HasMany, where } = require("sequelize");
 
 const imageController = {
     upload: upload,
@@ -128,28 +128,33 @@ async function deleteImage(req, res, next){
 
 async function getLikedImages(req, res, next){
     try{
-        res.status(200).send("Successfully Got All Liked Images For User!");
+        const likedImages = await UserLikedImages.findAll({ attributes: ['image'], where: {user: req.query.user}});
+        if (likedImages){
+            res.status(200).json(likedImages);
+        }else{
+            res.status(200).send("No Liked Images!");
+        }
     } catch (err){
         next(err);
     }
 }
 
-
 async function likeImage(req, res, next){
     try{
         const image = await Image.findOne({ where: { name: req.body.imageName}});
         if (image){
-            const alreadyLikedImage = await UserLikedImages.findOne({ where: { user: req.body.user, image: image.id}});
+            const alreadyLikedImage = await UserLikedImages.findOne({ where: { user: req.body.user, image: image.name}});
             if (alreadyLikedImage){
                 res.status(400).send("Already Liked Image!");
             }else{
-                await UserLikedImages.create({user: req.body.user, image: image.id});
+                image.likes = image.likes + 1;
+                await image.save();
+                await UserLikedImages.create({user: req.body.user, image: image.name});
                 res.status(200).send("Successfully Liked Image!");
             }
         }else{
             res.status(400).send("Image Doesn't Exist!");
         }
-        
     } catch (err){
         next(err);
     }
