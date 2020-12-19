@@ -123,6 +123,7 @@ class CameraScreen extends Component {
   async sendSketchToBackEnd(){
     let email = this.props.email;
     let sketchLocation = [this.state.latitude, this.state.longitude];
+    //let sketchLocation = [40.7185, -73.9882];
     console.log("this is sketch location: " + sketchLocation);
     let imageFileUri = this.state.mergedImageURI;
     let splittedFileUri = imageFileUri.split("/");

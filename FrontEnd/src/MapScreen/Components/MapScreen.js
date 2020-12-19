@@ -97,7 +97,7 @@ export default class MapScreen extends Component{
       for(let i = 0; i < sketchInfos.length; i++){
         if (latitude == sketchInfos[i]['latitude'] && longitude == sketchInfos[i]['longitude']){
           imageUrlForPressedMarker = sketchInfos[i]['url'];
-          imageNameForPressedMarker = sketchInfos[i]['name'].split(".")[0];
+          imageNameForPressedMarker = sketchInfos[i]['name'].split("_")[0];
           user = sketchInfos[i]['user'].split("@")[0];
         }
       }

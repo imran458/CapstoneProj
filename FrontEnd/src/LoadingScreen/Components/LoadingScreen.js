@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, Image} from 'react-native';
 import styles from '../Styles/LoadingScreenStyles.js';
 
-const FIVE_SECONDS = 5000;
+const FIVE_SECONDS = 9000;
 
 export default class LoadingScreen extends Component{
     componentDidMount(){
