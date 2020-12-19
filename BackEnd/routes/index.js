@@ -6,7 +6,7 @@ const usersRouter = require("./users");
 
 const authRouter = require("./auth");
 
-const imageRouter = require("./image")
+const imageRouter = require("./image");
 
 
 // Mount our subrouters to assemble our apiRouter;

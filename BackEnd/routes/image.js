@@ -6,10 +6,16 @@ const imageController = require("../controllers/image");
 router.route("/upload").post(imageController.upload);
 
 // GET api/image/getImages
-router.route("/getImages").get(imageController.getImages)
+router.route("/getImages").get(imageController.getImages);
 
 // DELETE api/image/delete/<imagename>
-router.route("/delete/:name").delete(imageController.deleteImage)
+router.route("/delete/:name").delete(imageController.deleteImage);
+
+// POST api/image/likeImage
+router.route("/likeImage").post(imageController.likeImage);
+
+// GET api/image/getLikedImages
+router.route("/getLikedImages").get(imageController.getLikedImages);
 
 
 

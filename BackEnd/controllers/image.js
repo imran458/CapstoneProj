@@ -1,10 +1,12 @@
-const { Image } = require("../database/models");
+const { Image, UserLikedImages } = require("../database/models");
 const { Op } = require("sequelize");
 
 const imageController = {
     upload: upload,
     getImages: getImages,
-    deleteImage: deleteImage
+    deleteImage: deleteImage,
+    likeImage: likeImage,
+    getLikedImages: getLikedImages
 };
 
 const { Storage } = require('@google-cloud/storage');
@@ -124,6 +126,22 @@ async function deleteImage(req, res, next){
 }
 
 
+async function getLikedImages(req, res, next){
+    try{
+        res.status(200).send("Successfully Got All Liked Images For User!");
+    } catch (err){
+        next(err);
+    }
+}
+
+
+async function likeImage(req, res, next){
+    try{
+        res.status(200).send("Successfully Liked Image!");
+    } catch (err){
+        next(err);
+    }
+}
 
 
 module.exports = imageController;
