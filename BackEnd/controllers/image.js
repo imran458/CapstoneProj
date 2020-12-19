@@ -1,4 +1,4 @@
-const { Image, UserLikedImages } = require("../database/models");
+const { Image, UserLikedImages, User } = require("../database/models");
 const { Op } = require("sequelize");
 
 const imageController = {
@@ -137,7 +137,19 @@ async function getLikedImages(req, res, next){
 
 async function likeImage(req, res, next){
     try{
-        res.status(200).send("Successfully Liked Image!");
+        const image = await Image.findOne({ where: { name: req.body.imageName}});
+        if (image){
+            const alreadyLikedImage = await UserLikedImages.findOne({ where: { user: req.body.user, image: image.id}});
+            if (alreadyLikedImage){
+                res.status(400).send("Already Liked Image!");
+            }else{
+                await UserLikedImages.create({user: req.body.user, image: image.id});
+                res.status(200).send("Successfully Liked Image!");
+            }
+        }else{
+            res.status(400).send("Image Doesn't Exist!");
+        }
+        
     } catch (err){
         next(err);
     }
