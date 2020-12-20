@@ -5,7 +5,7 @@ const imageController = {
     upload: upload,
     getImages: getImages,
     deleteImage: deleteImage,
-    likeImage: likeImage,
+    updateImageLikes: updateImageLikes,
     getLikedImages: getLikedImages
 };
 
@@ -25,9 +25,10 @@ async function upload(req, res, next) {
         newName.pop();
         newName.join('.').replace(/ /g, "_");
         newName = newName + "_" + Date.now() + ".jpg";
-        const coordinates = JSON.parse(req.body.coordinates)
-        const latitude = coordinates[0]
-        const longitude = coordinates[1]
+        const coordinates = JSON.parse(req.body.coordinates);
+        const latitude = coordinates[0];
+        const longitude = coordinates[1];
+        const initialLikes = 0;
 
         const user = req.body.user
         if(!user){
@@ -46,7 +47,8 @@ async function upload(req, res, next) {
                 name: newName,
                 user: user,
                 latitude: latitude,
-                longitude: longitude
+                longitude: longitude,
+                likes: initialLikes
             })
 
             res.status(200).send(url);
@@ -125,7 +127,6 @@ async function deleteImage(req, res, next){
     }
 }
 
-
 async function getLikedImages(req, res, next){
     try{
         const likedImages = await UserLikedImages.findAll({ attributes: ['image'], where: {user: req.query.user}});
@@ -139,13 +140,16 @@ async function getLikedImages(req, res, next){
     }
 }
 
-async function likeImage(req, res, next){
+async function updateImageLikes(req, res, next){
     try{
-        const image = await Image.findOne({ where: { name: req.body.imageName}});
+        const image = await Image.findOne({ where: {name: req.body.imageName}});
         if (image){
-            const alreadyLikedImage = await UserLikedImages.findOne({ where: { user: req.body.user, image: image.name}});
+            const alreadyLikedImage = await UserLikedImages.findOne({ where: {user: req.body.user, image: image.name}});
             if (alreadyLikedImage){
-                res.status(400).send("Already Liked Image!");
+                image.likes = image.likes - 1;
+                await image.save();
+                await UserLikedImages.destroy({ where: {user: req.body.user, image: image.name}});
+                res.status(200).send("Unliked Image!");
             }else{
                 image.likes = image.likes + 1;
                 await image.save();

@@ -12,7 +12,7 @@ router.route("/getImages").get(imageController.getImages);
 router.route("/delete/:name").delete(imageController.deleteImage);
 
 // POST api/image/likeImage
-router.route("/likeImage").post(imageController.likeImage);
+router.route("/updateImageLikes").post(imageController.updateImageLikes);
 
 // GET api/image/getLikedImages
 router.route("/getLikedImages").get(imageController.getLikedImages);
