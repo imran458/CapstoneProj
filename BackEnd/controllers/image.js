@@ -1,5 +1,5 @@
 const { Image, UserLikedImages, User } = require("../database/models");
-const { Op, HasMany, where } = require("sequelize");
+const { Op } = require("sequelize");
 
 const imageController = {
     upload: upload,
