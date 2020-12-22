@@ -11,7 +11,7 @@ router.route("/getImages").get(imageController.getImages);
 // DELETE api/image/delete/<imagename>
 router.route("/delete/:name").delete(imageController.deleteImage);
 
-// POST api/image/likeImage
+// POST api/image/updateImageLikes
 router.route("/updateImageLikes").post(imageController.updateImageLikes);
 
 // GET api/image/getLikedImages

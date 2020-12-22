@@ -11,19 +11,12 @@ export default StyleSheet.create({
         color: 'black'
     },
 
-    map1: {
+    map: {
         position: 'absolute',
-        top: '10%',
+        top: '0%',
         height: '100%',
         width: '100%',
         zIndex: -1
-    },
-
-    map2: {
-        position: 'absolute',
-        top: '25%',
-        height: '100%',
-        width: '100%',
     },
 
     flatList1: {

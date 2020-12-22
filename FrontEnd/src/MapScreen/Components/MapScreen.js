@@ -1,10 +1,9 @@
 import React, {Component} from 'react';
-import {View, Text, Image, Modal, TouchableOpacity, SafeAreaView, FlatList, Platform, Alert, PermissionsAndroid} from 'react-native';
+import {View, Text, Image, Modal, TouchableOpacity, SafeAreaView, Platform, Alert, PermissionsAndroid} from 'react-native';
 import Geolocation from '@react-native-community/geolocation';
 import { connect } from 'react-redux';
 import styles from '../Styles/MapScreenStyles.js';
 import MapView, { Marker } from 'react-native-maps';
-import SearchBar from 'react-native-search-bar';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
 import _, { range } from 'lodash';
@@ -234,97 +233,58 @@ class MapScreen extends Component{
   render() {
     return (
       <SafeAreaView style={styles.container}>
-        <SearchBar
-          value={this.state.search}
-          onChangeText={text=>
-            this.handleChangeTextDebounced(text)
-          }
-          textColor='black'  
-        />
-
-        {(this.state.search === "" || this.state.predictions.length === 0) ?
-          <View style={styles.container}>
-            <FlatList 
-              style={styles.flatList1}
-              data={this.state.predictions}
-              renderItem={this.renderPrediction}
-            />
-            <MapView 
-              region={this.state.region}
-              style={styles.map1}
-              followsUserLocation={true}
-              showsMyLocationButton={true}     
-              showsUserLocation={true}
-            > 
-              {this.state.markers.map((marker, index) => (
-                <Marker
-                  key={index}
-                  coordinate={{
-                    latitude: marker.latitude,
-                    longitude: marker.longitude
-                  }}
-                  onPress={() => this.findImageForPressedMarker(marker.latitude, marker.longitude)}
-                />
-              ))}
-            </MapView>
-            <Modal
-              animationType="fade"
-              transparent={true}
-              visible={this.state.modalVisible}
-              onRequestClose={() => {Alert.alert("Modal has been closed.");}}
-              >
-              <View style={styles.centeredView}>
-                <View style={styles.modalView}>
-                <TouchableOpacity onPress={() => {this.setState({modalVisible: false})}} style={styles.closeModalIcon}>
-                  <AntDesign name="closecircle" size={20} color="red"/>       
+        <View style={styles.container}>
+          <MapView 
+            region={this.state.region}
+            style={styles.map}
+            followsUserLocation={true}
+            showsMyLocationButton={true}     
+            showsUserLocation={true}
+          > 
+            {this.state.markers.map((marker, index) => (
+              <Marker
+                key={index}
+                coordinate={{
+                  latitude: marker.latitude,
+                  longitude: marker.longitude
+                }}
+                onPress={() => this.findImageForPressedMarker(marker.latitude, marker.longitude)}
+              />
+            ))}
+          </MapView>
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={this.state.modalVisible}
+            onRequestClose={() => {Alert.alert("Modal has been closed.");}}
+            >
+            <View style={styles.centeredView}>
+              <View style={styles.modalView}>
+              <TouchableOpacity onPress={() => {this.setState({modalVisible: false})}} style={styles.closeModalIcon}>
+                <AntDesign name="closecircle" size={20} color="red"/>       
+              </TouchableOpacity>
+              
+              {!this.state.pressedMarkerImageAlreadyLiked ? 
+                <TouchableOpacity style={styles.unpressedLikeIcon} onPress={() => this.updateImageLikes()}> 
+                  <EvilIcons name="heart" size={35} />       
                 </TouchableOpacity>
-                
-                {!this.state.pressedMarkerImageAlreadyLiked ? 
-                  <TouchableOpacity style={styles.unpressedLikeIcon} onPress={() => this.updateImageLikes()}> 
-                    <EvilIcons name="heart" size={35} />       
-                  </TouchableOpacity>
-                  :
-                  <TouchableOpacity style={styles.pressedLikeIcon} onPress={() => this.updateImageLikes()}>
-                    <AntDesign name="heart" color="red" size={22}/>       
-                  </TouchableOpacity>
-                }
+                :
+                <TouchableOpacity style={styles.pressedLikeIcon} onPress={() => this.updateImageLikes()}>
+                  <AntDesign name="heart" color="red" size={22}/>       
+                </TouchableOpacity>
+              }
 
-                <Text style={styles.renderedSketchName}>{this.state.pressedMarkerUserName}'s {this.state.pressedMarkerImageName}</Text>
-                <Image style={styles.renderedSketch} source={{uri: this.state.pressedMarkerImageUrl}}/>
-                <Text style={styles.imageLikes}>{this.state.imageLikes}</Text>
-                </View>
+              <Text style={styles.renderedSketchName}>{this.state.pressedMarkerUserName}'s {this.state.pressedMarkerImageName}</Text>
+              <Image style={styles.renderedSketch} source={{uri: this.state.pressedMarkerImageUrl}}/>
+              <Text style={styles.imageLikes}>{this.state.imageLikes}</Text>
               </View>
-            </Modal>
+            </View>
+          </Modal>
 
-            <TouchableOpacity onPress={() => this.jumpToCameraScreen()} style={styles.cameraIcon}>
-              <AntDesign name="camera" size={38} />       
-            </TouchableOpacity>
-
-          </View> : 
-          <View style={styles.container}>
-            <FlatList 
-              style={styles.flatList2}
-              data={this.state.predictions}
-              renderItem={this.renderPrediction}
-            />
-            <MapView 
-                region={this.state.region}
-                style={styles.map2}
-                followsUserLocation={true}
-                showsMyLocationButton={true}     
-                showsUserLocation={true}
-            > 
-              {this.state.markers.map((marker, index) => (
-                <Marker
-                  key={index}
-                  coordinate={{
-                    latitude: marker.latitude,
-                    longitude: marker.longitude
-                  }}
-                />
-              ))}
-            </MapView>
-          </View>}
+          <TouchableOpacity onPress={() => this.jumpToCameraScreen()} style={styles.cameraIcon}>
+            <AntDesign name="camera" size={38} />       
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     );
   }
