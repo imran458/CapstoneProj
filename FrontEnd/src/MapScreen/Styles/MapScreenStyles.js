@@ -79,7 +79,7 @@ export default StyleSheet.create({
 
     cameraIcon: {
         position: 'absolute', 
-        top: '90%', 
+        top: '1%', 
         left: '3%'
     },
 
