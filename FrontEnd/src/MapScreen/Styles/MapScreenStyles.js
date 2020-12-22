@@ -94,7 +94,7 @@ export default StyleSheet.create({
         width: '100%', 
         height: '100%', 
         position: 'absolute',
-        top: '30%'
+        top: '20%'
     },
 
     renderedSketchName: {
@@ -108,6 +108,24 @@ export default StyleSheet.create({
         position: 'absolute',
         top: '3%',
         left: '3%'
+    },
+
+    unpressedLikeIcon: {
+        position: 'absolute',
+        top: '122.5%',
+        left: '0%',
+    },
+
+    pressedLikeIcon: {
+        position: 'absolute',
+        top: '124.2%',
+        left: '3.5%',
+    },
+
+    imageLikes: {
+        position: 'absolute',
+        top: '124.2%',
+        left: '20%',
     }
 
 });
