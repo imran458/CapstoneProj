@@ -1,10 +1,12 @@
-const { Image } = require("../database/models");
+const { Image, UserLikedImages, User } = require("../database/models");
 const { Op } = require("sequelize");
 
 const imageController = {
     upload: upload,
     getImages: getImages,
-    deleteImage: deleteImage
+    deleteImage: deleteImage,
+    updateImageLikes: updateImageLikes,
+    getLikedImages: getLikedImages
 };
 
 const { Storage } = require('@google-cloud/storage');
@@ -23,9 +25,10 @@ async function upload(req, res, next) {
         newName.pop();
         newName.join('.').replace(/ /g, "_");
         newName = newName + "_" + Date.now() + ".jpg";
-        const coordinates = JSON.parse(req.body.coordinates)
-        const latitude = coordinates[0]
-        const longitude = coordinates[1]
+        const coordinates = JSON.parse(req.body.coordinates);
+        const latitude = coordinates[0];
+        const longitude = coordinates[1];
+        const initialLikes = 0;
 
         const user = req.body.user
         if(!user){
@@ -44,7 +47,8 @@ async function upload(req, res, next) {
                 name: newName,
                 user: user,
                 latitude: latitude,
-                longitude: longitude
+                longitude: longitude,
+                likes: initialLikes
             })
 
             res.status(200).send(url);
@@ -123,7 +127,42 @@ async function deleteImage(req, res, next){
     }
 }
 
+async function getLikedImages(req, res, next){
+    try{
+        const likedImages = await UserLikedImages.findAll({ attributes: ['image'], where: {user: req.query.user}});
+        if (likedImages){
+            res.status(200).json(likedImages);
+        }else{
+            res.status(200).send("No Liked Images!");
+        }
+    } catch (err){
+        next(err);
+    }
+}
 
+async function updateImageLikes(req, res, next){
+    try{
+        const image = await Image.findOne({ where: {name: req.body.imageName}});
+        if (image){
+            const alreadyLikedImage = await UserLikedImages.findOne({ where: {user: req.body.user, image: image.name}});
+            if (alreadyLikedImage){
+                image.likes = image.likes - 1;
+                await image.save();
+                await UserLikedImages.destroy({ where: {user: req.body.user, image: image.name}});
+                res.status(200).send("Unliked Image!");
+            }else{
+                image.likes = image.likes + 1;
+                await image.save();
+                await UserLikedImages.create({user: req.body.user, image: image.name});
+                res.status(200).send("Successfully Liked Image!");
+            }
+        }else{
+            res.status(400).send("Image Doesn't Exist!");
+        }
+    } catch (err){
+        next(err);
+    }
+}
 
 
 module.exports = imageController;

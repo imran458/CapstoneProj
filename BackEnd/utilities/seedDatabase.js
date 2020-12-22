@@ -18,7 +18,8 @@ const seedDatabase = async () => {
 				name: "Test-Twitter-Icon.jpg",
 				user: "jordan@gmail.com",
 				latitude: 40.8320147,
-				longitude: -73.872721
+				longitude: -73.872721,
+				likes: 0
 			})
 		]);
 	} catch (err) {

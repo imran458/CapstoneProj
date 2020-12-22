@@ -11,19 +11,12 @@ export default StyleSheet.create({
         color: 'black'
     },
 
-    map1: {
+    map: {
         position: 'absolute',
-        top: '10%',
+        top: '0%',
         height: '100%',
         width: '100%',
         zIndex: -1
-    },
-
-    map2: {
-        position: 'absolute',
-        top: '25%',
-        height: '100%',
-        width: '100%',
     },
 
     flatList1: {
@@ -86,7 +79,7 @@ export default StyleSheet.create({
 
     cameraIcon: {
         position: 'absolute', 
-        top: '90%', 
+        top: '1%', 
         left: '3%'
     },
 
@@ -94,7 +87,7 @@ export default StyleSheet.create({
         width: '100%', 
         height: '100%', 
         position: 'absolute',
-        top: '30%'
+        top: '20%'
     },
 
     renderedSketchName: {
@@ -108,6 +101,24 @@ export default StyleSheet.create({
         position: 'absolute',
         top: '3%',
         left: '3%'
+    },
+
+    unpressedLikeIcon: {
+        position: 'absolute',
+        top: '122.5%',
+        left: '0%',
+    },
+
+    pressedLikeIcon: {
+        position: 'absolute',
+        top: '124.2%',
+        left: '3.5%',
+    },
+
+    imageLikes: {
+        position: 'absolute',
+        top: '124.2%',
+        left: '20%',
     }
 
 });

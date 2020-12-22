@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, TouchableOpacity, PermissionsAndroid, Platform, Alert, Modal, Text, TextInput, KeyboardAvoidingView} from 'react-native';
+import {View, TouchableOpacity, SafeAreaView, PermissionsAndroid, Platform, Alert, Modal, Text, TextInput, KeyboardAvoidingView} from 'react-native';
 import styles from '../Styles/CameraScreenStyles.js';
 import {RNCamera} from 'react-native-camera';
 import RNSketchCanvas from '@terrylinla/react-native-sketch-canvas';
@@ -123,8 +123,6 @@ class CameraScreen extends Component {
   async sendSketchToBackEnd(){
     let email = this.props.email;
     let sketchLocation = [this.state.latitude, this.state.longitude];
-    //let sketchLocation = [40.7185, -73.9882];
-    console.log("this is sketch location: " + sketchLocation);
     let imageFileUri = this.state.mergedImageURI;
     let splittedFileUri = imageFileUri.split("/");
     let file = splittedFileUri[splittedFileUri.length-1];

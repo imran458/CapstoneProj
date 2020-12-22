@@ -24,6 +24,10 @@ const Image = db.define("image", {
 		unique: true,
 		allowNull: false
 	},
+	likes: {
+		type: Sequelize.INTEGER,
+		allowNull: false
+	}
 });
 
 
