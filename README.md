@@ -12,7 +12,7 @@ Diggraffiti is a mobile app that allows anyone to go anywhere in the world and c
 ![Login Screen](https://github.com/imran458/Diggraffiti/blob/master/FrontEnd/assets/LoginScreen.png)
 
 <p align="center">
-  <img src="https://github.com/imran458/Diggraffiti/blob/master/FrontEnd/assets/camera.gif" alt="Sublime's custom image"/>
+  <img src="https://github.com/imran458/Diggraffiti/blob/master/FrontEnd/assets/camera2.gif" alt="Sublime's custom image"/>
 </p>
 
 ![Maps Screen](https://github.com/imran458/Diggraffiti/blob/master/FrontEnd/assets/maps.png)
