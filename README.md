@@ -10,4 +10,4 @@ Diggraffiti is a mobile app that allows anyone to go anywhere in the world and c
 ## App Screenshots :camera:
 ![Loading Screen](https://github.com/imran458/Diggraffiti/blob/master/FrontEnd/assets/LoadingScreen.png)
 ![Login Screen](https://github.com/imran458/Diggraffiti/blob/master/FrontEnd/assets/LoginScreen.png)
-![Camera Screen](https://github.com/imran458/Diggraffiti/blob/master/FrontEnd/assets/camera.gif)
+<div style="text-align:center"><img src="https://github.com/imran458/Diggraffiti/blob/master/FrontEnd/assets/camera.gif" /></div>
